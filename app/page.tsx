@@ -124,13 +124,14 @@ const features = [
     demo: <WebVitals />,
   },
   {
-    title: "One-click Deploy",
+    title: "중간지점찾기",
     description:
-      "Jumpstart your next project by deploying Precedent to [Vercel](https://vercel.com/) in one click.",
+      // "Jumpstart your next project by deploying Precedent to [Vercel](https://vercel.com/) in one click.",
+      "각자의 위치를 입력하고 중간지점을 찾아보세요",
     demo: (
-      <a href={DEPLOY_URL}>
+      <a href="/middlespot">
         <Image
-          src="https://vercel.com/button"
+          src="./meethare.png"
           alt="Deploy with Vercel"
           width={120}
           height={30}
