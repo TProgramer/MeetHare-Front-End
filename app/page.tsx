@@ -131,7 +131,7 @@ const features = [
     demo: (
       <a href="/middlespot">
         <Image
-          src="./meethare.png"
+          src="/meetHare-logo.png"
           alt="Deploy with Vercel"
           width={120}
           height={30}
