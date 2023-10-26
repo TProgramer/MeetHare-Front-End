@@ -7,9 +7,9 @@ import Footer from "@/components/layout/footer";
 import { Suspense } from "react";
 
 export const metadata = {
-  title: "Precedent - Building blocks for your Next.js project",
+  title: "MeetHare시계토끼",
   description:
-    "Precedent is the all-in-one solution for your Next.js project. It includes a design system, authentication, analytics, and more.",
+    "클릭한번으로 약속의 모든 과정을 한번에",
   metadataBase: new URL("https://precedent.dev"),
   themeColor: "#FFF",
 };
