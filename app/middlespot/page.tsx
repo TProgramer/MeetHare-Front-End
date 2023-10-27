@@ -10,7 +10,7 @@ export default function MiddleSpot() {
     { latitude: 37.5594, longitude: 126.9436, userId: "이채영" },
     { latitude: 37.5462, longitude: 127.0575, userId: "삼채영" }
   ]);
-
+  // setUserLocations(prev => [...prev, userId : "일채영"])
   // 버튼 클릭 시 사용자 위치 정보를 콘솔에 출력 
   const handleFindLocationClick = () => {
     userLocations.forEach((location, index) => {
@@ -49,7 +49,7 @@ export default function MiddleSpot() {
           <div className="relative h-full w-full flex items-center justify-center">
             <form>
               {userLocations.map((location, index) => ( 
-                // <input
+                // <input 
                 //   key={index}
                 //   className="flex w-36 items-center justify-center rounded-md border border-gray-300 px-3 py-2 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100 text-blue-800 text-center mt-4"
                 //   // type="text" 

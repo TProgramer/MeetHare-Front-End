@@ -1,13 +1,18 @@
 "use client";
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function FindNearStation() {
     // 유저 검색어를 저장할 상태 변수
     const [searchValue, setSearchValue] = useState("");
     // 서버에서 온 검색결과를 저장할 상태 변수
-    const [responseData, setResponseData] = useState<{ stationName: string }[] | null>(null);
+    // const [responseData, setResponseData] = useState<{ stationName: string }[] | null>(null);
+    const [responseData, setResponseData] = useState<{ stationName: string; longitude: number; latitude: number }[] | null>(null);
+
+    const [selectedStation, setSelectedStation] = useState(""); // 클릭한 역 이름 상태 추가
+
+    const router = useRouter(); // useRouter 훅 사용
+    
 
     // 검색 버튼을 클릭했을 때 호출될 이벤트 핸들러
     const handleSearchClick = () => {
@@ -37,6 +42,28 @@ export default function FindNearStation() {
                 console.error("API 요청 에러:", error);
             });
     };
+
+    const handleStationClick = (stationName: string, longitude: number, latitude: number) => {
+        console.log("클릭한 역 이름:", stationName);
+        console.log("Longitude:", longitude);
+        console.log("Latitude:", latitude);
+        setSelectedStation(stationName);
+
+
+    };
+
+    // const setUserPlaceData {
+    //     fetch("")
+    // }
+    // router.push({
+    //     pathname: '/middleSpot', // middleSpot 페이지 경로
+    //     query: { // 선택한 역의 정보를 query 파라미터로 전달
+    //         stationName,
+    //         longitude,
+    //         latitude,
+    //     },
+    // });
+
     return (
         <div className="z-10 w-full max-w-xl px-5 xl:px-0">
             <a
@@ -61,7 +88,7 @@ export default function FindNearStation() {
                     찾기
                 </button>
             </div>
-            {responseData && responseData.length > 0 && (
+            {/* {responseData && responseData.length > 0 && (
                   <>
                 <div className="z-10 w-full max-w-xl px-5 xl:px-0"> 
                     {responseData.map((data, index) => (
@@ -76,7 +103,25 @@ export default function FindNearStation() {
                 </div>
                 <div>선택</div>
                 </>
+            )} */}
+            {responseData && responseData.length > 0 && (
+                <>
+                <div className="z-10 w-full max-w-xl px-5 xl:px-0">
+                    {responseData.map((data, index) => (
+                        <input
+                            key={index}
+                            className="flex w-60 items-center bg-gray-100 justify-center rounded-md border border-gray-300 px-3 py-2 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100 text-gray-800 text-center mt-4"
+                            type="text"
+                            value={data.stationName}
+                            readOnly
+                            onClick={() => handleStationClick(data.stationName, data.longitude, data.latitude)} // 클릭 이벤트 핸들러 추가
+                        />
+                    ))}
+                </div>
+                <button>선택</button>
+                </>
             )}
+            
         </div>
     );
 }
