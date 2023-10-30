@@ -45,7 +45,8 @@ export default function MiddleSpot() {
       console.log(JSON.stringify(userLocations));
     });
     // 사용자 위치 정보를 서버에 전달
-    fetch("http://localhost:8080/map/middlespot", {
+
+    fetch("http://3.36.122.35:8080/map/middlespot", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -57,12 +58,16 @@ export default function MiddleSpot() {
         if (!response.ok) {
           throw new Error("API 요청 실패");
         }
-        console.log("response", response);
-        // return response.json();
+        return response.json();
       })
       .then((data) => {
         console.log("API 응답 데이터:", data);
+        console.log(data.station);
         // 여기에서 API 응답 데이터를 처리
+        // const stringifiedData = JSON.stringify(data)
+        // console.log(stringifiedData);
+        localStorage.setItem("station", JSON.stringify(data));
+        window.location.href = "/maps";
       })
       .catch((error) => {
         console.error("API 요청 에러:", error);
