@@ -12,6 +12,7 @@ export default function maps() {
     stationName: string;
     longitude: number;
     latitude: number;
+    transPath: string;
     infracount: string;
     userId: string;
   }
@@ -20,7 +21,7 @@ export default function maps() {
   const [mapBound, setMapBound] = useState<any>([]);
 
   const mapRef = useRef<any>(null);
-  let map = undefined;
+  let map: undefined;
 
   useEffect(() => {
     const kakaoMapScript = document.createElement("script");
@@ -31,6 +32,7 @@ export default function maps() {
     const onLoadKakaoAPI = () => {
       window.kakao.maps.load(() => {
         const bounds = new window.kakao.maps.LatLngBounds();
+
         const fetchData = async () => {
           return await new Promise<Station[]>((resolve, reject) => {
             const myValue = localStorage.getItem("station");
@@ -45,19 +47,70 @@ export default function maps() {
           });
         };
 
+        var linePath: any[] = [];
+        // var polyline: any = undefined;
+        var polyline: any[] = [];
+
         fetchData()
           .then((list: Station[]) => {
             list.forEach((Station: Station) => {
               bounds.extend(
                 new kakao.maps.LatLng(Station.latitude, Station.longitude),
               );
+
+              // 지도에 표시할 선을 생성합니다
+              var subLinePath: any[] = [];
+
+              JSON.parse(Station.transPath).result.path[0].subPath.forEach(
+                (subPath: any) => {
+                  console.log(subPath);
+
+                  if (subPath.trafficType != 1) {
+                    return;
+                  }
+
+                  if (subPath.trafficType == 1) {
+                    subLinePath.push(
+                      new window.kakao.maps.LatLng(
+                        subPath.startY,
+                        subPath.startX,
+                      ),
+                    );
+                    subLinePath.push(
+                      new window.kakao.maps.LatLng(subPath.endY, subPath.endX),
+                    );
+                  }
+                },
+              );
+
+              linePath.push(subLinePath);
             });
             setMapBound(bounds);
 
             setTimeout(() => {
               map = mapRef.current;
-              if (map) map.setBounds(bounds);
-            }, 10);
+
+              linePath.forEach((line: any) => {
+                console.log(line);
+                polyline.push(
+                  new window.kakao.maps.Polyline({
+                    path: line, // 선을 구성하는 좌표배열 입니다
+                    strokeWeight: 5, // 선의 두께 입니다
+                    strokeColor: "#FF0000", // 선의 색깔입니다
+                    strokeOpacity: 0.9, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                    strokeStyle: "solid", // 선의 스타일입니다
+                  }),
+                );
+              });
+
+              if (map) {
+                mapRef.current?.setBounds(bounds);
+              }
+              polyline.forEach((poly: any) => {
+                console.log(1);
+                poly.setMap(map);
+              });
+            }, 100);
           })
           .catch((error) => {
             console.error(error);
@@ -75,6 +128,7 @@ export default function maps() {
     stationName: station?.stationName || "",
     longitude: station?.longitude || 0,
     latitude: station?.latitude || 0,
+    transPath: station?.transPath || "",
     infracount: station?.infracount || "",
     userId: station?.userId || "",
   };
