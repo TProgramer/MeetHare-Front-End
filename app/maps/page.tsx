@@ -17,9 +17,10 @@ export default function maps() {
   }
 
   const [startStation, setStartStation] = useState<Station[]>([]);
-  const [bound, setBound] = useState<any>([]);
+  const [mapBound, setMapBound] = useState<any>([]);
 
-  const mapRef = useRef(null);
+  const mapRef = useRef<any>(null);
+  let map = undefined;
 
   useEffect(() => {
     const kakaoMapScript = document.createElement("script");
@@ -29,26 +30,9 @@ export default function maps() {
 
     const onLoadKakaoAPI = () => {
       window.kakao.maps.load(() => {
-        // const myValue = localStorage.getItem("station");
-        // if (myValue != null) {
-        //   const jsonValue = JSON.parse(myValue);
-        //   setStation(jsonValue.station);
-        //   setStartStation(jsonValue.list);
-        // }
-
-        // const bounds = new window.kakao.maps.LatLngBounds();
-        // bounds.extend(new kakao.maps.LatLng(33.452278, 126.567803));
-        // console.log(bounds);
-        // startStation.forEach((Station) => {
-        //   bounds.extend(
-        //     new kakao.maps.LatLng(Station.latitude, Station.longitude),
-        //   );
-        // });
-        // console.log(startStation);
-
         const bounds = new window.kakao.maps.LatLngBounds();
         const fetchData = async () => {
-          return new Promise<Station[]>((resolve, reject) => {
+          return await new Promise<Station[]>((resolve, reject) => {
             const myValue = localStorage.getItem("station");
             if (myValue != null) {
               const jsonValue = JSON.parse(myValue);
@@ -61,12 +45,6 @@ export default function maps() {
           });
         };
 
-        const reboundsFunction = () => {
-          const map = mapRef.current;
-          console.log(map);
-          if (map) map.setBounds(bound);
-        };
-
         fetchData()
           .then((list: Station[]) => {
             list.forEach((Station: Station) => {
@@ -74,8 +52,12 @@ export default function maps() {
                 new kakao.maps.LatLng(Station.latitude, Station.longitude),
               );
             });
-            setBound(bounds);
-            reboundsFunction();
+            setMapBound(bounds);
+
+            setTimeout(() => {
+              map = mapRef.current;
+              if (map) map.setBounds(bounds);
+            }, 10);
           })
           .catch((error) => {
             console.error(error);
@@ -84,7 +66,7 @@ export default function maps() {
     };
 
     kakaoMapScript.addEventListener("load", onLoadKakaoAPI);
-  }, []);
+  }, [map]);
 
   const [station, setStation] = useState<Station | null>(null);
 
@@ -132,13 +114,7 @@ export default function maps() {
               ))}
           </Map>
         )}
-        {/* <button onClick={() => {}}>버튼!!!!!!!!!!</button> */}
       </div>
-
-      {/* <Script
-        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ef830f15ecdbe289eb83b2d4bce50ee3&libraries=services,clusterer&autoload=false"
-        strategy="beforeInteractive"
-      /> */}
     </>
   );
 }
