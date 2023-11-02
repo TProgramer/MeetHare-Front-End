@@ -6,7 +6,7 @@ import { useEffect, useState, useMemo, useRef } from "react";
 import Script from "next/script";
 import { start } from "repl";
 
-export default function maps() {
+export default function Maps() {
   interface Station {
     stationId: number;
     stationName: string;
@@ -26,7 +26,7 @@ export default function maps() {
   useEffect(() => {
     const kakaoMapScript = document.createElement("script");
     kakaoMapScript.async = false;
-    kakaoMapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=ef830f15ecdbe289eb83b2d4bce50ee3&libraries=services,clusterer&autoload=false`;
+    kakaoMapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.kakaoMapKey}&libraries=services,clusterer&autoload=false`;
     document.head.appendChild(kakaoMapScript);
 
     const onLoadKakaoAPI = () => {
