@@ -46,7 +46,7 @@ export default function MiddleSpot() {
     });
     // 사용자 위치 정보를 서버에 전달
 
-    fetch("http://3.36.122.35:8080/map/middlespot", {
+    fetch(`${process.env.NEXT_PUBLIC_serverURL}/map/middlespot`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
