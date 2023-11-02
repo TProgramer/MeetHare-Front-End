@@ -7,11 +7,12 @@ import Popover from "@/components/shared/popover";
 import Image from "next/image";
 import { Session } from "next-auth";
 
-export default function UserDropdown({ session }: { session: Session }) {
-  const { email, image } = session?.user || {};
+// export default function UserDropdown({ session }: { session: Session }) {
+export default function UserDropdown() {
   const [openPopover, setOpenPopover] = useState(false);
 
-  if (!email) return null;
+  const email = "null";
+  const image = "null";
 
   return (
     <div className="relative inline-block text-left">
@@ -19,13 +20,13 @@ export default function UserDropdown({ session }: { session: Session }) {
         content={
           <div className="w-full rounded-md bg-white p-2 sm:w-56">
             <div className="p-2">
-              {session?.user?.name && (
+              {/* {session?.user?.name && (
                 <p className="truncate text-sm font-medium text-gray-900">
                   {session?.user?.name}
                 </p>
-              )}
+              )} */}
               <p className="truncate text-sm text-gray-500">
-                {session?.user?.email}
+                {/* {session?.user?.email} */}
               </p>
             </div>
             <button
