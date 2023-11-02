@@ -29,7 +29,7 @@ export default function FindNearStation() {
     const queryString = queryParams.toString();
 
     // GET 요청 보내기
-    fetch(`${process.env.NEXT_PUBLIC_serverURL}?${queryString}`, {
+    fetch(`${process.env.NEXT_PUBLIC_serverURL}map/myStation?${queryString}`, {
       method: "GET",
     })
       .then((response) => {
