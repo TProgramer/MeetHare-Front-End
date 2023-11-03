@@ -18,7 +18,7 @@ export default async function recommendPlace() {
 
   // const [data, setData] = useState<string | null>(null);
 
-  const data = await fetch("https://meethare.site/map/test", {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_serverURL}map/test`, {
     cache: "no-store",
   });
   const ddata = await data.text();
