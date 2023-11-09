@@ -17,8 +17,8 @@ module.exports = {
         "fade-up": "fade-up 0.5s",
         "fade-down": "fade-down 0.5s",
         // Tooltip
-        "slide-up-fade": "slide-up-fade 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-        "slide-down-fade": "slide-down-fade 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+        "slide-up-fade": "slide-up-fade 0.3s (0.16, 1, 0.3, 1)",
+        "slide-down-fade": "slide-down-fade 0.3s (0.16, 1, 0.3, 1)",
       },
       keyframes: {
         // Fade up and down

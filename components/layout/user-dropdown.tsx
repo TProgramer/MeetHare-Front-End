@@ -1,49 +1,39 @@
 "use client";
 
 import { useState } from "react";
-import { signOut } from "next-auth/react";
-import { LayoutDashboard, LogOut } from "lucide-react";
+import Cookies from "js-cookie";
+
 import Popover from "@/components/shared/popover";
 import Image from "next/image";
-import { Session } from "next-auth";
 
-// export default function UserDropdown({ session }: { session: Session }) {
-export default function UserDropdown() {
+export default function UserDropdown({ token }: { token: String }) {
   const [openPopover, setOpenPopover] = useState(false);
 
-  const email = "null";
-  const image = "null";
+  const handleLogout = () => {
+    // "authorize" 쿠키 삭제
+    Cookies.remove("Bearer", { path: "/" });
+    window.location.href = "/";
+
+    // 로그아웃 후 추가적인 작업을 수행하려면 여기에 코드를 추가하세요.
+
+    // 팝오버 닫기
+    setOpenPopover(false);
+  };
+
+  if (!token) return null;
 
   return (
     <div className="relative inline-block text-left">
       <Popover
         content={
-          <div className="w-full rounded-md bg-white p-2 sm:w-56">
-            <div className="p-2">
-              {/* {session?.user?.name && (
-                <p className="truncate text-sm font-medium text-gray-900">
-                  {session?.user?.name}
-                </p>
-              )} */}
-              <p className="truncate text-sm text-gray-500">
-                {/* {session?.user?.email} */}
-              </p>
-            </div>
+          <>
             <button
-              className="relative flex w-full cursor-not-allowed items-center justify-start space-x-2 rounded-md p-2 text-left text-sm transition-all duration-75 hover:bg-gray-100"
-              disabled
+              className="w-3/5 rounded bg-blue-300 px-6 py-2 font-bold text-white hover:bg-blue-400"
+              onClick={handleLogout}
             >
-              <LayoutDashboard className="h-4 w-4" />
-              <p className="text-sm">Dashboard</p>
+              로그아웃
             </button>
-            <button
-              className="relative flex w-full items-center justify-start space-x-2 rounded-md p-2 text-left text-sm transition-all duration-75 hover:bg-gray-100"
-              onClick={() => signOut()}
-            >
-              <LogOut className="h-4 w-4" />
-              <p className="text-sm">Logout</p>
-            </button>
-          </div>
+          </>
         }
         align="end"
         openPopover={openPopover}
@@ -54,10 +44,11 @@ export default function UserDropdown() {
           className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-gray-300 transition-all duration-75 focus:outline-none active:scale-95 sm:h-9 sm:w-9"
         >
           <Image
-            alt={email}
-            src={image || `https://avatars.dicebear.com/api/micah/${email}.svg`}
-            width={40}
-            height={40}
+            alt="logo"
+            src={"/meetHare-logo.png"}
+            quality={100}
+            width={50}
+            height={50}
           />
         </button>
       </Popover>

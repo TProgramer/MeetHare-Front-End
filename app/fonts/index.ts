@@ -10,3 +10,15 @@ export const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });
+
+export const gmarketMedium = localFont({
+  src: "./GmarketSansMedium.otf",
+})
+
+export const gmarketLight = localFont({
+  src: "./GmarketSansLight.otf",
+})
+
+export const gmarketBold = localFont({
+  src: "./GmarketSansBold.otf",
+})

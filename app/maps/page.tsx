@@ -2,9 +2,11 @@
 /*global kakao*/
 // import KakaoMap from 'components/layout/maps';
 import { Map, MapMarker } from "react-kakao-maps-sdk";
-import { useEffect, useState, useMemo, useRef } from "react";
-import Script from "next/script";
-import { start } from "repl";
+import { useEffect, useState, useRef } from "react";
+import Button from "@mui/material/Button";
+import Link from "next/link";
+import localFont from "next/font/local";
+import { gmarketMedium, gmarketBold, gmarketLight } from "../fonts";
 
 export default function Maps() {
   interface Station {
@@ -60,25 +62,21 @@ export default function Maps() {
 
               // 지도에 표시할 선을 생성합니다
               var subLinePath: any[] = [];
-
+              // console.log(JSON.parse(Station.transPath));
               JSON.parse(Station.transPath).result.path[0].subPath.forEach(
                 (subPath: any) => {
-                  console.log(subPath);
+                  // console.log(subPath);
 
                   if (subPath.trafficType != 1) {
                     return;
                   }
 
                   if (subPath.trafficType == 1) {
-                    subLinePath.push(
-                      new window.kakao.maps.LatLng(
-                        subPath.startY,
-                        subPath.startX,
-                      ),
-                    );
-                    subLinePath.push(
-                      new window.kakao.maps.LatLng(subPath.endY, subPath.endX),
-                    );
+                    subPath.passStopList.stations.forEach((ex: any) => {
+                      subLinePath.push(
+                        new window.kakao.maps.LatLng(ex.y, ex.x),
+                      );
+                    });
                   }
                 },
               );
@@ -91,12 +89,11 @@ export default function Maps() {
               map = mapRef.current;
 
               linePath.forEach((line: any) => {
-                console.log(line);
                 polyline.push(
                   new window.kakao.maps.Polyline({
                     path: line, // 선을 구성하는 좌표배열 입니다
                     strokeWeight: 5, // 선의 두께 입니다
-                    strokeColor: "#FF0000", // 선의 색깔입니다
+                    strokeColor: "#9381ff", // 선의 색깔입니다
                     strokeOpacity: 0.9, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
                     strokeStyle: "solid", // 선의 스타일입니다
                   }),
@@ -107,7 +104,6 @@ export default function Maps() {
                 mapRef.current?.setBounds(bounds);
               }
               polyline.forEach((poly: any) => {
-                console.log(1);
                 poly.setMap(map);
               });
             }, 100);
@@ -116,6 +112,9 @@ export default function Maps() {
             console.error(error);
           });
       });
+
+      const endStation = document.getElementById("endStation");
+      console.log(endStation);
     };
 
     kakaoMapScript.addEventListener("load", onLoadKakaoAPI);
@@ -137,37 +136,77 @@ export default function Maps() {
 
   return (
     <>
-      <div className="z-10 w-full max-w-xl px-5 xl:px-0">
-        {station && (
-          <Map
-            center={{ lat: myStation.latitude, lng: myStation.longitude }}
-            style={{ width: "100%", height: "360px" }}
-            level={6}
-            id="PlaceMap"
-            ref={mapRef}
-          >
-            <MapMarker
-              position={{ lat: myStation.latitude, lng: myStation.longitude }}
-            >
-              <div style={{ color: "#000" }}>{myStation.stationName}</div>
-            </MapMarker>
-
-            {startStation.length > 0 &&
-              startStation.map((Station, index) => (
+      <div className="z-10 flex w-full max-w-xl flex-col rounded-md px-5 xl:px-0">
+        <div className="h-120 relative col-span-1 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md ">
+          <div className="flex flex-col items-center justify-center">
+            <p className={`${gmarketMedium.className}`}>추천 장소는</p>
+            <p className={`${gmarketMedium.className} text-2xl`}>
+              {myStation.stationName}
+            </p>
+            <p className={`${gmarketMedium.className}`}>입니다</p>
+          </div>
+          <br />
+          <div>
+            {station && (
+              <Map
+                center={{ lat: myStation.latitude, lng: myStation.longitude }}
+                style={{ width: "95%", height: "360px" }}
+                level={6}
+                id="PlaceMap"
+                ref={mapRef}
+                className="outline outline-2 outline-offset-4 outline-purple-300"
+              >
                 <MapMarker
-                  key={`${Station.userId}-${Station.longitude}-${Station.latitude}`}
-                  position={{ lat: Station.latitude, lng: Station.longitude }}
-                  clickable={true}
-                  onMouseOver={() => setIsOpen(true)}
-                  onMouseOut={() => setIsOpen(false)}
+                  position={{
+                    lat: myStation.latitude,
+                    lng: myStation.longitude,
+                  }}
                 >
-                  {isOpen && (
-                    <div style={{ color: "#000" }}>{Station.userId}</div>
-                  )}
+                  <div
+                    style={{ color: "#000", width: "150px" }}
+                    className="w-150 z-50 flex items-center justify-center"
+                    id="endStation"
+                  >
+                    <div>{myStation.stationName}</div>
+                  </div>
                 </MapMarker>
-              ))}
-          </Map>
-        )}
+
+                {startStation.length > 0 &&
+                  startStation.map((Station, index) => (
+                    <MapMarker
+                      key={`${Station.userId}-${Station.longitude}-${Station.latitude}`}
+                      position={{
+                        lat: Station.latitude,
+                        lng: Station.longitude,
+                      }}
+                      clickable={true}
+                      onMouseOver={() => setIsOpen(true)}
+                      onMouseOut={() => setIsOpen(false)}
+                    >
+                      {isOpen && (
+                        <div style={{ color: "#000" }}>
+                          {Station.userId}1111
+                        </div>
+                      )}
+                    </MapMarker>
+                  ))}
+              </Map>
+            )}
+          </div>
+          <br />
+          <div className="flex justify-between">
+            <Button variant="outlined" className={`${gmarketMedium.className}`}>
+              추천 리스트로 돌아가기
+            </Button>
+            <Button
+              variant="outlined"
+              href={`/place/${station?.stationId}`}
+              className={`${gmarketMedium.className}`}
+            >
+              약속 장소 정하기
+            </Button>
+          </div>
+        </div>
       </div>
     </>
   );

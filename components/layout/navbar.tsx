@@ -5,10 +5,8 @@ import Link from "next/link";
 import useScroll from "@/lib/hooks/use-scroll";
 import { useSignInModal } from "./sign-in-modal";
 import UserDropdown from "./user-dropdown";
-import { Session } from "next-auth";
 
-export default function NavBar() {
-  let loggedIn = false;
+export default function NavBar({ token }: { token: String | null }) {
   const { SignInModal, setShowSignInModal } = useSignInModal();
   const scrolled = useScroll(50);
 
@@ -33,8 +31,17 @@ export default function NavBar() {
             ></Image>
           </Link>
           <div>
-            {loggedIn ? (
-              <UserDropdown />
+            {/* {!token && (
+            <button
+              className="rounded-full border border-black bg-black p-1.5 px-4 text-sm text-white transition-all hover:bg-white hover:text-black"
+              onClick={() => setShowSignInModal(true)}
+            >
+            Sign In
+            </button>
+          )} */}
+
+            {token ? (
+              <UserDropdown token={token} />
             ) : (
               <button
                 className="rounded-full border border-black bg-black p-1.5 px-4 text-sm text-white transition-all hover:bg-white hover:text-black"

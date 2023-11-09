@@ -2,11 +2,24 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function FindNearStation() {
+type Props = {
+  roomId: string;
+  token: string;
+  totalNumber: number;
+  submitNumber: number;
+};
+
+export default function StartPoint({
+  roomId,
+  token,
+  totalNumber,
+  submitNumber,
+}: Props) {
   // 유저 검색어를 저장할 상태 변수
   const [searchValue, setSearchValue] = useState("");
   // 서버에서 온 검색결과를 저장할 상태 변수
   // const [responseData, setResponseData] = useState<{ stationName: string }[] | null>(null);
+
   const [responseData, setResponseData] = useState<
     { stationName: string; longitude: number; latitude: number }[] | null
   >(null);
@@ -28,10 +41,8 @@ export default function FindNearStation() {
     queryParams.append("stationName", searchValue);
     const queryString = queryParams.toString();
 
-    // `http://localhost:8080/map/myStation?${queryString}`
-    // `http://3.36.122.35:8080/map/myStation?${queryString}`
     // GET 요청 보내기
-    fetch(`${process.env.NEXT_PUBLIC_serverURL}map/myStation?${queryString}`, {
+    fetch(`https://meethare.site/map/myStation?${queryString}`, {
       method: "GET",
     })
       .then((response) => {
@@ -50,14 +61,50 @@ export default function FindNearStation() {
       });
   };
 
+  //제출버튼
+  const handleNextClick = (
+    Name: string,
+    longitude: number,
+    latitude: number,
+  ) => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_serverURL}/user-manage/room/changestartpoint`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({
+          roomId: parseInt(roomId, 10),
+          startPoint: Name,
+          longitude: longitude,
+          latitude: latitude,
+        }),
+      },
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("API 요청 실패");
+        }
+        return response;
+      })
+      .then((data) => {
+        // 여기에서 API 응답 데이터를 처리
+        console.log("API 응답 데이터:", data.toString);
+        //여기선 그냥 두기,
+        //마지막 요청일 경우 다음 것으로 넘기기
+      })
+      .catch((error) => {
+        console.error("API 요청 에러:", error);
+      });
+  };
+
   const handleStationClick = (
     stationName: string,
     longitude: number,
     latitude: number,
   ) => {
-    console.log("클릭한 역 이름:", stationName);
-    console.log("Longitude:", longitude);
-    console.log("Latitude:", latitude);
     setSelectedStation({ stationName, longitude, latitude });
   };
 
@@ -75,17 +122,11 @@ export default function FindNearStation() {
 
   return (
     <div className="z-10 w-full max-w-xl px-5 xl:px-0">
-      <a
-        href="https://twitter.com/steventey/status/1613928948915920896"
-        target="_blank"
-        rel="noreferrer"
-        className="mx-auto mb-5 flex max-w-fit animate-fade-up items-center justify-center space-x-2 overflow-hidden rounded-full bg-blue-100 px-7 py-2 transition-colors hover:bg-blue-200"
-      >
-        <p className="text-sm font-semibold text-[#1d9bf0]">
-          출발역을 검색하세요
-        </p>
-      </a>
-      <div className="flex">
+      <p className="pt-4 text-center text-sm font-semibold text-[#1d9bf0]">
+        출발역을 검색하세요
+      </p>
+
+      <div className="flex justify-center">
         <input
           className="mt-4 flex w-60 items-center justify-center rounded-md border border-gray-300 px-3 py-2 text-center text-blue-800 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
           type="text"
@@ -100,22 +141,7 @@ export default function FindNearStation() {
           찾기
         </button>
       </div>
-      {/* {responseData && responseData.length > 0 && (
-                  <>
-                <div className="z-10 w-full max-w-xl px-5 xl:px-0"> 
-                    {responseData.map((data, index) => (
-                        <input
-                            key={index}
-                            className="flex w-60 items-center bg-gray-100 justify-center rounded-md border border-gray-300 px-3 py-2 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100 text-gray-800 text-center mt-4"
-                            type="text"
-                            value={data.stationName}
-                            readOnly
-                        />
-                    ))}
-                </div>
-                <div>선택</div>
-                </>
-            )} */}
+
       {responseData && responseData.length > 0 && (
         <>
           <div className="z-10 w-full max-w-xl px-5 xl:px-0">
@@ -136,7 +162,7 @@ export default function FindNearStation() {
               />
             ))}
           </div>
-          {/* <button>선택</button> */}
+
           <button
             type="button"
             className="mt-4 flex w-36 items-center justify-center rounded-md border border-gray-300 px-3 py-2 text-center text-blue-800 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
@@ -145,13 +171,11 @@ export default function FindNearStation() {
                 alert("역을 선택해주세요");
                 return;
               }
-              let index = Number(searchParams.get("index"));
-              let data = JSON.parse(searchParams.get("data") || "{}");
-              data[index].latitude = selectedStation?.latitude;
-              data[index].longitude = selectedStation?.longitude;
-              data[index].stationName = selectedStation?.stationName;
-              router.push(
-                `/middlespot?data=${JSON.stringify(data)}&data=${data}`,
+
+              handleNextClick(
+                selectedStation?.stationName,
+                selectedStation?.longitude,
+                selectedStation?.latitude,
               );
             }}
           >

@@ -4,56 +4,33 @@ import { Long_Cang } from "next/font/google";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import useRoomInfoStore from "store/store";
 
-export default function MiddleSpot() {
+export default function MiddleSpotRoom() {
+  const myRoomName = useRoomInfoStore((state) => state.myRoomName);
+  const memberList = useRoomInfoStore((state) => state.memberList);
+  const roominfo = useRoomInfoStore((state) => state.roominfo);
+
   const router = useRouter();
-  const stationNameList: Array<any> = [];
-  const [userLocations, setUserLocations] = useState([
-    {
-      latitude: 37.4979,
-      longitude: 127.0276,
-      userId: "일채영",
-      stationName: "",
-    },
-    {
-      latitude: 37.5594,
-      longitude: 126.9436,
-      userId: "이채영",
-      stationName: "",
-    },
-    {
-      latitude: 37.5462,
-      longitude: 127.0575,
-      userId: "삼채영",
-      stationName: "",
-    },
-  ]);
+  const [userLocations, setUserLocations] = useState(memberList);
 
-  const searchParams = useSearchParams();
-  useEffect(() => {
-    if (searchParams.get("data")) {
-      let data = JSON.parse(searchParams.get("data") || "[{}]");
-      setUserLocations(data);
-    }
-  }, []);
-  // setUserLocations(prev => [...prev, userId : "일채영"])
-  // 버튼 클릭 시 사용자 위치 정보를 콘솔에 출력
   const handleFindLocationClick = () => {
-    userLocations.forEach((location, index) => {
-      console.log(
-        `사용자 위치: ${location.userId}, 위도: ${location.latitude}, 경도: ${location.longitude}`,
-      );
-      console.log(JSON.stringify(userLocations));
-    });
+    const newArray = userLocations.map((item) => ({
+      userId: item.nickName,
+      stationName: item.stationName,
+      latitude: item.latitude,
+      longitude: item.longitude,
+    }));
+    console.log(JSON.stringify(newArray));
     // 사용자 위치 정보를 서버에 전달
 
-    fetch(`${process.env.NEXT_PUBLIC_serverURL}map/middlespot`, {
+    fetch("http://3.36.122.35:8080/map/middlespot", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       // body: JSON.stringify({ locations: userLocations }),
-      body: JSON.stringify(userLocations),
+      body: JSON.stringify(newArray),
     })
       .then((response) => {
         if (!response.ok) {
@@ -63,13 +40,12 @@ export default function MiddleSpot() {
       })
       .then((data) => {
         console.log("API 응답 데이터:", data);
-        // data.forEach((station: any) => stationNameList.push(station));
-
+        console.log(data.station);
         // 여기에서 API 응답 데이터를 처리
         // const stringifiedData = JSON.stringify(data)
         // console.log(stringifiedData);
-        localStorage.setItem("stationList", JSON.stringify(data));
-        window.location.href = "/recommendMap";
+        localStorage.setItem("station", JSON.stringify(data));
+        window.location.href = "/maps";
       })
       .catch((error) => {
         console.error("API 요청 에러:", error);
@@ -83,36 +59,12 @@ export default function MiddleSpot() {
           <div className="relative flex h-full w-full items-center justify-center">
             <form>
               {userLocations.map((location, index) => (
-                // <input
-                //   key={index}
-                //   className="flex w-36 items-center justify-center rounded-md border border-gray-300 px-3 py-2 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100 text-blue-800 text-center mt-4"
-                //   // type="text"
-                //   type="button"
-                //   value={location.userId}
-                //   readOnly
-                // />
-
-                // <Link
-                //   className="mt-4 flex w-36 items-center justify-center rounded-md border border-gray-300 px-3 py-2 text-center text-blue-800 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
-                //   key={index}
-                //   href="/findnearstation"
-                // >
-                //   {" "}
-                //   {location.userId} 위치
-                // </Link>
                 <button
                   key={index}
                   type="button"
                   className="mt-4 flex w-36 items-center justify-center rounded-md border border-gray-300 px-3 py-2 text-center text-blue-800 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
-                  onClick={() =>
-                    router.push(
-                      `findnearstation?index=${index}&data=${JSON.stringify(
-                        userLocations,
-                      )}`,
-                    )
-                  }
                 >
-                  {location.userId} - {""}
+                  {location.nickName} - {""}
                   {location.stationName ? location.stationName : "미정"}
                 </button>
               ))}
