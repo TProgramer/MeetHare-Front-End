@@ -1,8 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
+import useRoomInfoStore from "../../store/store";
 
 interface PreferenceDTO {
-  user_id: number;
+  user_id: string;
   quite: boolean;
   food: string;
   activity: string;
@@ -17,15 +18,40 @@ const categoriesData: { name: string; options: string[] }[] = [
   },
   {
     name: "food",
-    options: ["한식", "중식", "양식", "일식"],
+    options: [
+      "족발",
+      "보쌈",
+      "찜",
+      "탕",
+      "찌개",
+      "돈까스",
+      "회",
+      "일식",
+      "피자",
+      "고기",
+      "양식",
+      "치킨",
+      "중삭",
+      "국수",
+      "분식",
+    ],
   },
   {
     name: "activity",
-    options: ["헬스", "클라이밍", "수영", "요가", "등산", "런닝"],
+    options: [
+      "헬스",
+      "클라이밍",
+      "수영",
+      "탁구",
+      "볼링",
+      "배드민턴",
+      "농구",
+      "축구",
+    ],
   },
   {
     name: "culture",
-    options: ["미술", "음악", "연극", "영화"],
+    options: ["미술", "영화", "공연"],
   },
 ];
 
@@ -39,7 +65,7 @@ const categoriesLan: { [key: string]: string } = {
 export default function Home() {
   const [preference, setPreference] = useState<PreferenceDTO | null>(null);
   const [selectedOptions, setSelectedOptions] = useState<PreferenceDTO>({
-    user_id: 0,
+    user_id: "",
     quite: false,
     food: "",
     activity: "",
@@ -48,6 +74,7 @@ export default function Home() {
 
   const loadCategories = async (user_id: string) => {
     try {
+      selectedOptions.user_id = user_id;
       const apiUrl = `http://${process.env.NEXT_PUBLIC_serverURL}/place/priority/${user_id}`;
       const response = await fetch(apiUrl);
 
@@ -63,7 +90,6 @@ export default function Home() {
   };
   const savePreferences = async () => {
     try {
-      selectedOptions.user_id = 1;
       const apiUrl = `http://${process.env.NEXT_PUBLIC_serverURL}/place/priority`;
       const response = await fetch(apiUrl, {
         method: "PUT",
@@ -82,11 +108,8 @@ export default function Home() {
       console.error("선호도 업데이트 중 에러 발생:", error);
     }
   };
-  useEffect(() => {
-    // const user_id = sessionStorage.getItem("user");
-    const user_id = "1";
-    if (user_id != null) loadCategories(user_id);
-  }, []);
+  const user_id: string = useRoomInfoStore((state: any) => state.userID);
+  if (user_id !== "") loadCategories(user_id);
 
   const handleOptionClick = (category: string, option: string) => {
     if (selectedOptions[category] === option) {

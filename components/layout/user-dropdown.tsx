@@ -11,12 +11,20 @@ export default function UserDropdown({ token }: { token: String }) {
 
   const handleLogout = () => {
     // "authorize" 쿠키 삭제
-    Cookies.remove("Bearer", { path: "/" });
+    Cookies.remove("Bearer", {
+      path: "/",
+      domain: "meethare.site",
+      secure: true,
+    });
     window.location.href = "/";
 
     // 로그아웃 후 추가적인 작업을 수행하려면 여기에 코드를 추가하세요.
 
     // 팝오버 닫기
+    setOpenPopover(false);
+  };
+  const preference = () => {
+    window.location.href = "/preference";
     setOpenPopover(false);
   };
 
@@ -27,12 +35,20 @@ export default function UserDropdown({ token }: { token: String }) {
       <Popover
         content={
           <>
-            <button
-              className="w-3/5 rounded bg-blue-300 px-6 py-2 font-bold text-white hover:bg-blue-400"
-              onClick={handleLogout}
-            >
-              로그아웃
-            </button>
+            <div className="flex-direction-column flex">
+              <button
+                className="w-3/5 rounded bg-blue-300 px-6 py-2 font-bold text-white hover:bg-blue-400"
+                onClick={handleLogout}
+              >
+                로그아웃
+              </button>
+              <button
+                className="w-3/5 rounded bg-blue-300 px-6 py-2 font-bold text-white hover:bg-blue-400"
+                onClick={preference}
+              >
+                선호장소
+              </button>
+            </div>
           </>
         }
         align="end"

@@ -14,6 +14,14 @@ interface PlaceDTO {
   place_category: string;
 }
 
+type member = {
+  id: number;
+  nickName: string;
+  stationName: string;
+  latitude: number;
+  longitude: number;
+};
+
 interface Category {
   [key: string]: PlaceDTO[];
 }
@@ -25,6 +33,14 @@ export default function Place(props: any) {
     Dispatch<SetStateAction<Category | undefined>>,
   ] = useState();
   const [category, setCategory] = useState("restaurant");
+
+  const memberList: number[] = useRoomInfoStore((state: any) =>
+    state.memberList.map((member: member) => member.id),
+  );
+
+  const fixCategory = useRoomInfoStore((state: any) => state.roominfo.category);
+  if (fixCategory !== "") setCategory(fixCategory);
+  const roomName = useRoomInfoStore((state: any) => state.myRoomName);
 
   const cardClick = async (placeNum: number) => {
     setShowPlaceModal(true);
@@ -50,13 +66,12 @@ export default function Place(props: any) {
   const fetchPlaceList = async (stationNum: number) => {
     try {
       const token = Cookies.get("Bearer");
-      if (token) {
+      if (token && roomName !== "") {
         const apiUrl = `${process.env.NEXT_PUBLIC_serverURL}/place/complex`;
-        const requetData = {
-          station_id: 1,
-          category: `restaurant`,
-          user_list: `[String(user_id)]`,
-          roomId: 1,
+        const requestData = {
+          station_id: stationNum,
+          category: fixCategory,
+          user_list: memberList,
         };
         const JwtToken = `Bearer ${token}`;
         const response = await fetch(apiUrl, {
@@ -65,15 +80,15 @@ export default function Place(props: any) {
             "Content-Type": "application/json",
             Authorization: JwtToken,
           },
-          body: JSON.stringify(requetData),
+          body: JSON.stringify(requestData),
         });
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        const data = await response.json();
-        setCategoryList(data);
+        const data: PlaceDTO[] = await response.json();
+        setCategoryList({ fixCategory: data });
       } else {
         const apiUrl = `${process.env.NEXT_PUBLIC_serverURL}/place/simple/${stationNum}`;
         const response = await fetch(apiUrl);
@@ -98,7 +113,7 @@ export default function Place(props: any) {
         <div className="my-5 grid w-full max-w-screen-xl animate-fade-up grid-cols-1 gap-5 px-5 md:grid-cols-3 xl:px-0">
           <div className="sticky grid grid-cols-1 gap-5 md:grid-cols-3">
             <div className="flex-direction-row flex justify-between ">
-              {!Cookies.get("Bearer") && (
+              {roomName !== "" && (
                 <>
                   <button
                     onClick={() => setCategory("restaurant")}
