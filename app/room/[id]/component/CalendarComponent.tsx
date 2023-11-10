@@ -148,10 +148,8 @@ export default function CalendarComponent({
           alert("날짜를 갱신합니다");
           window.location.reload();
         }
-        console.log("서버 응답:", resp);
       })
-      .catch((error) => {
-        console.error("오류 발생:", error);
+      .catch(() => {
       });
   };
 

@@ -43,7 +43,6 @@ export default function NextForce({
     setIsLoading(true);
 
     try {
-      console.log(token);
       const resp = await fetch(
         `${process.env.NEXT_PUBLIC_serverURL}/user-manage/room/nextforce`,
         {
@@ -63,7 +62,6 @@ export default function NextForce({
       }
     } catch (error) {
       // 데이터 가져오기 실패 시 에러 처리
-      console.error("데이터 가져오기 오류:", error);
     }
   };
 

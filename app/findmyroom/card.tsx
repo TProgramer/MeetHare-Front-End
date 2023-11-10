@@ -53,10 +53,8 @@ export default function Card({ title, roomId, token }: Props) {
         // API에서 받은 데이터를 배열로 변환하여 상태로 설정
         window.location.reload();
       } else {
-        console.error("API 호출 중 오류 발생");
       }
     } catch (error) {
-      console.error("API 호출 중 오류 발생:", error);
       //여기서 캐시를 지우던가 리프레시 토큰을 주도록 해야 겠다.
     }
   };

@@ -51,12 +51,10 @@ export default function Findmyroom() {
         const data = await resp.json();
         setDataList(data); // API에서 받은 데이터를 리스트로 저장
       } else {
-        console.error("API 호출 중 오류 발생");
         Cookies.remove("Bearer", { path: "/" });
         window.location.href = "/";
       }
     } catch (error) {
-      console.error("API 호출 중 오류 발생:", error);
       //여기서 캐시를 지우던가 리프레시 토큰을 주도록 해야 겠다.
     }
   };

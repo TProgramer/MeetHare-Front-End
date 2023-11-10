@@ -70,12 +70,10 @@ export default function Daylist({
           }
           window.location.reload();
         })
-        .then((data) => {
+        .then(() => {
           // 여기에서 API 응답 데이터를 처리
-          console.log("API 응답 데이터:", data);
         });
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -104,11 +102,9 @@ export default function Daylist({
         })
         .then((data) => {
           // 여기에서 API 응답 데이터를 처리
-          console.log("API 응답 데이터:", data);
           setResponseData(data.dateList); // 전체 응답 데이터를 상태에 저장
         });
     } catch (error) {
-      console.log(error);
     }
   };
 

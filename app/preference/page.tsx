@@ -30,10 +30,10 @@ const categoriesData: { name: string; options: string[] }[] = [
 ];
 
 const categoriesLan: { [key: string]: string } = {
-  quite: "조용한 장소",
-  food: "음식",
-  activity: "운동",
-  culture: "문화",
+  quite: "🤫 조용한 장소",
+  food: "🍽 음식",
+  activity: "💪 운동",
+  culture: "🎟 문화",
 };
 
 export default function Home() {
@@ -111,7 +111,7 @@ export default function Home() {
   return (
     <div className="z-10 w-full max-w-xl overflow-x-auto px-5 xl:px-0">
       <div className="my-5 grid w-full max-w-screen-xl animate-fade-up grid-cols-1 gap-5 px-5 md:grid-cols-3 xl:px-0">
-        <h1 className="mb-4 text-3xl font-bold">선호도 선택</h1>
+        <h1 className="mb-4 text-2xl font-bold">🤔당신의 취향은?</h1>
         <div className="-mx-2 flex flex-wrap">
           {categoriesData.map((categoryData, index) => (
             <div
@@ -125,7 +125,7 @@ export default function Home() {
                 <div className="flex flex-nowrap overflow-x-auto">
                   {categoryData.name === "quite" ? (
                     <button
-                      className={`border-gray-#9381FF m-1 h-full rounded border p-2 text-base`}
+                      className={`border-gray-#9381FF m-1 h-full rounded-full border px-3.5 py-2 text-sm text-gray-500`}
                       style={{
                         backgroundColor: selectedOptions[categoryData.name]
                           ? `#9381FF`
@@ -144,7 +144,7 @@ export default function Home() {
                     categoryData.options.map((option, optionIndex) => (
                       <button
                         key={optionIndex}
-                        className={`border-gray-#9381FF m-1 h-full whitespace-nowrap rounded border p-2 text-base`}
+                        className={`border-gray-#9381FF m-1 h-full whitespace-nowrap rounded-full border px-3.5 py-2 text-sm text-gray-500`}
                         style={{
                           backgroundColor:
                             selectedOptions[categoryData.name] === option

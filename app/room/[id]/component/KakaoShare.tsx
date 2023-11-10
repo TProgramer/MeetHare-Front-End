@@ -15,7 +15,6 @@ type Prop = {
 export default function KakaoShareButton({ nickNameList }: Prop) {
   const [isLoaded, setIsLoaded] = useState(false);
   const pathname = usePathname();
-  console.log(pathname);
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -25,7 +24,6 @@ export default function KakaoShareButton({ nickNameList }: Prop) {
     script.crossOrigin = "anonymous";
     document.head.appendChild(script);
     script.onload = () => {
-      console.log("초기화");
       setIsLoaded(true);
     };
   }, []);

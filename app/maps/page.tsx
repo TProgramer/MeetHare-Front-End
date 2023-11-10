@@ -7,6 +7,10 @@ import Button from "@mui/material/Button";
 import Link from "next/link";
 import localFont from "next/font/local";
 import { gmarketMedium, gmarketBold, gmarketLight } from "../fonts";
+// import { useEmblaCarousel } from "embla-carousel-react";
+import useEmblaCarousel from "embla-carousel-react";
+import "./embla.css";
+import { ReactNode } from "react";
 
 export default function Maps() {
   interface Station {
@@ -19,8 +23,41 @@ export default function Maps() {
     userId: string;
   }
 
+  interface userInfo {
+    latitude: number;
+    longitude: number;
+    transPath: string;
+    userId: string;
+    minTime: number;
+    minPath: path[];
+  }
+
+  interface path {
+    sectionTime: number;
+    trafficType: number;
+    startName?: string;
+    endName?: string;
+    lane?: Array<subway>;
+  }
+
+  interface subway {
+    name: string;
+    subwayCode: number;
+  }
+
+  interface carousel {
+    userInfo: userInfo[];
+    path: path[];
+  }
+
   const [startStation, setStartStation] = useState<Station[]>([]);
   const [mapBound, setMapBound] = useState<any>([]);
+  const [cardInfo, setCardInfo] = useState<userInfo[]>([]);
+  const [pathInfo, setPathInfo] = useState<path[][]>([]);
+
+  const [viewportRef, embla] = useEmblaCarousel({
+    loop: true,
+  });
 
   const mapRef = useRef<any>(null);
   let map: undefined;
@@ -42,6 +79,18 @@ export default function Maps() {
               const jsonValue = JSON.parse(myValue);
               setStation(jsonValue.station);
               setStartStation(jsonValue.list as Station[]);
+              setCardInfo(jsonValue.list as userInfo[]);
+              console.log(jsonValue.list as userInfo[]);
+              console.log(jsonValue.list);
+              const pathArr: path[][] = [];
+              jsonValue.list.forEach((user: any) => {
+                console.log(JSON.parse(user.minPath));
+                pathArr.push(JSON.parse(user.minPath));
+              });
+              console.log(pathArr);
+              setPathInfo(pathArr);
+
+              // setCardInfo(jsonValue.list);
               resolve(jsonValue.list); // jsonValue를 반환합니다.
             } else {
               reject(new Error("Unable to get station data")); // 에러 처리
@@ -120,6 +169,13 @@ export default function Maps() {
     kakaoMapScript.addEventListener("load", onLoadKakaoAPI);
   }, [map]);
 
+  useEffect(() => {
+    if (embla && cardInfo.length > 0) {
+      embla.reInit();
+    }
+    console.log(cardInfo);
+  }, [embla, cardInfo]);
+
   const [station, setStation] = useState<Station | null>(null);
 
   const myStation: Station = {
@@ -131,6 +187,13 @@ export default function Maps() {
     infracount: station?.infracount || "",
     userId: station?.userId || "",
   };
+
+  // const carouselInfo: carousel = {
+  //   userInfo: cardInfo,
+  //   path: pathInfo,
+  // };
+
+  // console.log(carouselInfo);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -146,15 +209,15 @@ export default function Maps() {
             <p className={`${gmarketMedium.className}`}>입니다</p>
           </div>
           <br />
-          <div>
+          <div className="grid place-items-center">
             {station && (
               <Map
                 center={{ lat: myStation.latitude, lng: myStation.longitude }}
-                style={{ width: "95%", height: "360px" }}
+                style={{ width: "90%", height: "360px" }}
                 level={6}
                 id="PlaceMap"
                 ref={mapRef}
-                className="outline outline-2 outline-offset-4 outline-purple-300"
+                className=" outline outline-2 outline-offset-4 outline-purple-300"
               >
                 <MapMarker
                   position={{
@@ -194,17 +257,61 @@ export default function Maps() {
             )}
           </div>
           <br />
-          <div className="flex justify-between">
-            <Button variant="outlined" className={`${gmarketMedium.className}`}>
-              추천 리스트로 돌아가기
-            </Button>
-            <Button
-              variant="outlined"
-              href={`/place/${station?.stationId}`}
-              className={`${gmarketMedium.className}`}
-            >
-              약속 장소 정하기
-            </Button>
+          <div>
+            <div className="embla">
+              <div className="embla__viewport" ref={viewportRef}>
+                <div className="embla__container">
+                  {cardInfo.length > 0 &&
+                    cardInfo.map((card, index) => (
+                      <div
+                        className={`${gmarketMedium.className} embla__slide`}
+                        key={index}
+                      >
+                        <div className="">{card.userId} 님</div>
+                        <div>{card.minTime}분</div>
+
+                        {pathInfo[index] &&
+                          pathInfo[index]
+                            .filter((info) => info.sectionTime != 0)
+                            .map((p: any) => (
+                              <div key={card.userId}>
+                                <div>***</div>
+                                <div>{p.trafficType == 1 && <p>지하철</p>}</div>
+                                <div>{p.trafficType == 2 && <p>버스</p>}</div>
+                                <div>{p.trafficType == 3 && <p>걷기</p>}</div>
+                                <div>
+                                  {p.sectionTime && <p> {p.sectionTime}분</p>}
+                                </div>
+                                <div>
+                                  {p.startName && <p> {p.startName}역 탑승</p>}
+                                </div>
+                                <div>
+                                  {p.endName && <p> {p.endName}역 하차</p>}
+                                </div>
+                                <div>{p.lane && p.lane[0].name}</div>
+                              </div>
+                            ))}
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-between">
+              <Button
+                variant="outlined"
+                className={`${gmarketMedium.className}`}
+              >
+                리스트로 돌아가기
+              </Button>
+              <Button
+                variant="outlined"
+                href={`/place/${station?.stationId}`}
+                className={`${gmarketMedium.className}`}
+              >
+                약속 장소 정하기
+              </Button>
+            </div>
           </div>
         </div>
       </div>

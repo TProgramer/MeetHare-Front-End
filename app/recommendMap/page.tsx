@@ -3,6 +3,8 @@
 import Button from "@mui/material/Button";
 import { gmarketMedium, gmarketBold, gmarketLight } from "../fonts";
 import { useEffect, useState, useRef } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function RecommendMap() {
   interface userInfo {
@@ -11,6 +13,7 @@ export default function RecommendMap() {
     transPath: string;
     userId: string;
     minTime: number;
+    minPath: string;
   }
 
   interface Station {
@@ -18,7 +21,7 @@ export default function RecommendMap() {
     stationName: string;
     longitude: number;
     latitude: number;
-    infracount: string;
+    infraCount: number;
   }
 
   interface Recommend {
@@ -28,6 +31,7 @@ export default function RecommendMap() {
   }
 
   const [stationNameList, setStationNameList] = useState<Recommend[]>([]);
+  const router = useRouter(); // useRouter 훅 사용
 
   useEffect(() => {
     const testFunction = () => {
@@ -64,9 +68,10 @@ export default function RecommendMap() {
           <div className=" flex flex-col items-center justify-center">
             <table>
               <thead>
-                <tr>
-                  <th className="w-80 pb-7">추천 역</th>
-                  <th className="pb-7">평균 소요 시간(분)</th>
+                <tr className="text-sm">
+                  <th className="w-1/3 pb-7">추천 역</th>
+                  <th className="w-1/3 pb-7">평균 소요 시간(분)</th>
+                  <th className="w-1/3 pb-7">주변 인프라</th>
                 </tr>
               </thead>
               <tbody>
@@ -74,10 +79,15 @@ export default function RecommendMap() {
                   stationNameList.map((data, index) => (
                     <tr
                       key={index}
-                      className={`${gmarketMedium.className} my-5 text-center text-2xl`}
+                      className={`${gmarketMedium.className} my-5 text-center text-lg hover:bg-purple-300 active:bg-purple-300`}
+                      onClick={() => (
+                        localStorage.setItem("station", JSON.stringify(data)),
+                        router.push("/maps")
+                      )}
                     >
                       <td>{data.station.stationName}</td>
                       <td>{data.averageTime}</td>
+                      <td>{data.station.infraCount}</td>
                     </tr>
                   ))}
               </tbody>

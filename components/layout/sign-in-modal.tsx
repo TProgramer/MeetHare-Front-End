@@ -19,6 +19,7 @@ const SignInModal = ({
 }) => {
   const [requestSent, setRequestSent] = useState(false);
 
+
   return (
     <Modal showModal={showSignInModal} setShowModal={setShowSignInModal}>
       <div className="w-full overflow-hidden shadow-xl md:max-w-md md:rounded-2xl md:border md:border-gray-200">
@@ -37,11 +38,12 @@ const SignInModal = ({
         </div>
 
         <div className="flex flex-col space-y-4 bg-gray-50 px-4 py-8 md:px-16">
-          <a
-            href={`${process.env.NEXT_PUBLIC_serverURL}oauth2/authorization/kakao`}
-          >
-            <img src="/kakao_login.png" alt="logo" />
-          </a>
+          <a href={`${process.env.NEXT_PUBLIC_serverURL}/oauth2/authorization/kakao`}>
+          <img
+              src="/kakao_login.png"
+              alt= "logo"
+            />
+            </a>
         </div>
       </div>
     </Modal>

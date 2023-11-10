@@ -117,16 +117,13 @@ export default function Room(props: any) {
           router.push(`/place/${res.fixStation}`);
         }
       } else if (resp.status === 204) {
-        console.log("204코드");
         alert("잘못된 접근입니다.");
         router.push(`/`);
       } else {
-        console.log("else");
         alert("입장할 수 없습니다.");
         router.push(`/`);
       }
     } catch (error) {
-      console.log(error);
       router.push(`/`);
     }
   };

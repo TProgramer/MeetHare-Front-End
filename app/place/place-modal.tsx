@@ -64,7 +64,7 @@ const PlaceModal = ({
               </h2>
               <div className="flex justify-center">
                 {modalData.place_img_url === "등록된 사진 없음" ? (
-                  <p className="text-gray-500">대표사진을 못 찾았어요..😅</p>
+                  <p className="text-gray-600">대표사진을 못 찾았어요..😅</p>
                 ) : (
                   <img
                     src={modalData.place_img_url}
@@ -81,7 +81,7 @@ const PlaceModal = ({
                   style={{ width: "20px", height: "27px" }}
                   alt="map-logo"
                 />
-                <div className="mr-5 flex flex-col justify-center text-left text-sm text-gray-500">
+                <div className="mr-5 flex flex-col justify-center text-left text-sm text-gray-600">
                   <div>
                     {modalData.place_address}&nbsp;
                     <span
@@ -117,7 +117,7 @@ const PlaceModal = ({
                   style={{ width: "20px", height: "20px" }}
                   alt="rating-logo"
                 />
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-600">
                   {modalData.place_grade
                     ? modalData.place_grade
                     : "별점이 없습니다"}
@@ -130,7 +130,7 @@ const PlaceModal = ({
                   style={{ width: "20px", height: "20px" }}
                   alt="time-logo"
                 />
-                <p className="text-left text-sm text-gray-500">
+                <p className="text-left text-sm text-gray-600">
                   {modalData.place_time
                     ? modalData.place_time.map((day, index) => (
                         <span key={index}>
@@ -148,7 +148,7 @@ const PlaceModal = ({
                   style={{ width: "20px", height: "20px" }}
                   alt="information"
                 />
-                <p className="ml-1 mr-5 text-left text-sm text-gray-500">
+                <p className="ml-1 mr-5 text-left text-sm text-gray-600">
                   {modalData.place_detail}
                 </p>
               </div>

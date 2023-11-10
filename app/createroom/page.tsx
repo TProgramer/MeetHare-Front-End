@@ -89,13 +89,11 @@ export default function CreateRoom() {
           body: JSON.stringify(requestData),
         },
       );
-      console.log(requestData);
       if (response.ok) {
         const roomId = await response.text();
         // 서버 응답이 성공인 경우 처리
         router.push(`/room/${roomId}`);
 
-        console.log(roomId);
         alert("방이 성공적으로 생성되었습니다.");
         // 입력항목 초기화
         setRoomName("");
@@ -109,7 +107,6 @@ export default function CreateRoom() {
         setIsRequestSuccess(false);
       }
     } catch (error) {
-      console.error("서버 통신 중 오류 발생:", error);
       router.push("/");
       setIsRequestSuccess(false);
     }

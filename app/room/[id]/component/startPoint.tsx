@@ -35,7 +35,6 @@ export default function StartPoint({
 
   // 검색 버튼을 클릭했을 때 호출될 이벤트 핸들러
   const handleSearchClick = () => {
-    console.log("검색어:", searchValue);
     // URL 매개변수 생성
     const queryParams = new URLSearchParams();
     queryParams.append("stationName", searchValue);
@@ -53,11 +52,9 @@ export default function StartPoint({
       })
       .then((data) => {
         // 여기에서 API 응답 데이터를 처리
-        console.log("API 응답 데이터:", data);
         setResponseData(data); // 전체 응답 데이터를 상태에 저장
       })
       .catch((error) => {
-        console.error("API 요청 에러:", error);
       });
   };
 
@@ -91,12 +88,10 @@ export default function StartPoint({
       })
       .then((data) => {
         // 여기에서 API 응답 데이터를 처리
-        console.log("API 응답 데이터:", data.toString);
         //여기선 그냥 두기,
         //마지막 요청일 경우 다음 것으로 넘기기
       })
       .catch((error) => {
-        console.error("API 요청 에러:", error);
       });
   };
 

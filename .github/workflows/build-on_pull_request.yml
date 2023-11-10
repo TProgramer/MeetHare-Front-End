@@ -47,5 +47,5 @@ jobs:
       - name: Build Next.js project
         run: pnpm build
         env:
-          NEXT_PUBLIC_serverURL: https://cluster.meethare.site/
+          NEXT_PUBLIC_serverURL: https://cluster.meethare.site
           NEXT_PUBLIC_KakaoJavaApi: b78b3f03395fa5c8cad6e4cd0fd761af
