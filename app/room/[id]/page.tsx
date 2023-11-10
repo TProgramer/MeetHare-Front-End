@@ -34,16 +34,13 @@ export default function Room(props: any) {
   };
 
   const {
-    myRoomName: roomName,
+    setUserId,
     setMyRoomName,
     setMemberList,
     setRoomInfo,
   } = useRoomInfoStore();
 
-  // const roomName = useRoomInfoStore((state) => state.myRoomName);
-  // const setMyRoomName = useRoomInfoStore((state) => state.setMyRoomName);
-  // const setMemberList = useRoomInfoStore((state) => state.setMemberList);
-  // const setRoomInfo = useRoomInfoStore((state) => state.setRoomInfo);
+  
 
   const [jwtToken, setJwtToken] = useState("");
   const [fixCalendarDates, setFixCalendarDates] = useState<Date[]>([]);
@@ -56,23 +53,34 @@ export default function Room(props: any) {
   const roomUuid = parts[parts.length - 1];
 
   useEffect(() => {
-    // 클라이언트 측에서 "jwtToken" 키의 쿠키를 가져오기
-    const token = Cookies.get("Bearer");
+    const fetchData = async () => {
+      try {
+        const token = Cookies.get("Bearer");
+        // 쿠키 삭제
+        Cookies.remove('originpath');
+        if (token) {
+          setJwtToken(`Bearer ${token}`);
+          await fetchDataWithToken(`Bearer ${token}`);
+        } else {
+          const currentUri = window.location.href;
+          Cookies.set('originpath', currentUri, {
+            damain : "meethare.site",
+            path: '/',
+          });
+          alert("로그인 해주세요");
+          location.href = `${process.env.NEXT_PUBLIC_serverURL}/oauth2/authorization/kakao`;
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-    if (token) {
-      setJwtToken(`Bearer ${token}`); // 토큰을 상태로 설정
-    } else {
-      alert("로그인 해주세요");
-      window.location.href = "/";
-    }
+    fetchData();
   }, []);
 
-  useEffect(() => {
-    // jwtToken을 사용하여 API 호출 시 Authorization 헤더에 토큰을 설정
-    if (jwtToken) {
-      fetchDataWithToken(jwtToken);
-    }
-  }, [jwtToken]);
+  
+
+
 
   useEffect(() => {
     // jwtToken을 사용하여 API 호출 시 Authorization 헤더에 토큰을 설정
@@ -106,6 +114,8 @@ export default function Room(props: any) {
           setMyRoomName(res?.myRoomName);
           setMemberList(res?.memberList);
           setRoomInfo(res?.roominfo);
+          setUserId(res?.userId);
+          
           router.push(`/middlespot/${props.params.id}`);
         } else if (
           res.roominfo.processivity === "RecommendPlace" ||
@@ -114,6 +124,7 @@ export default function Room(props: any) {
           setMyRoomName(res?.myRoomName);
           setMemberList(res?.memberList);
           setRoomInfo(res?.roominfo);
+          setUserId(res?.userId);
           router.push(`/place/${res.fixStation}`);
         }
       } else if (resp.status === 204) {

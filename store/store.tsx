@@ -22,15 +22,18 @@ type room = {
 };
 
 interface bearState {
+  userId : number;
   myRoomName: string;
   memberList: member[];
   roominfo: room;
+  setUserId : any,
   setMyRoomName(newName: string): any;
   setMemberList(newMemberList: member[]): any;
   setRoomInfo(newRoomInfo: room): any;
 }
 
 const useRoomInfoStore = create<bearState>((set) => ({
+  userId : 0,
   myRoomName: "",
   memberList: [],
   roominfo: {
@@ -45,6 +48,7 @@ const useRoomInfoStore = create<bearState>((set) => ({
     periodEnd: "",
     master: "",
   },
+  setUserId : (newUerId : number) => set({userId : newUerId}),
   setMyRoomName: (newName: string) => set({ myRoomName: newName }),
   setMemberList: (newMemberList: member[]) =>
     set({ memberList: newMemberList }),

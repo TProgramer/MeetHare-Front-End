@@ -1,5 +1,7 @@
 "use client";
 import Modal from "@/components/shared/modal";
+import Cookies from 'js-cookie';
+
 import {
   useState,
   Dispatch,
@@ -8,7 +10,6 @@ import {
   useMemo,
 } from "react";
 
-import Image from "next/image";
 
 const SignInModal = ({
   showSignInModal,
@@ -17,7 +18,16 @@ const SignInModal = ({
   showSignInModal: boolean;
   setShowSignInModal: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const [requestSent, setRequestSent] = useState(false);
+
+
+  const loginEvent = () => {
+
+    
+    location.href = `${process.env.NEXT_PUBLIC_serverURL}/oauth2/authorization/kakao`;
+  }
+
+
+
 
 
   return (
@@ -38,7 +48,8 @@ const SignInModal = ({
         </div>
 
         <div className="flex flex-col space-y-4 bg-gray-50 px-4 py-8 md:px-16">
-          <a href={`${process.env.NEXT_PUBLIC_serverURL}/oauth2/authorization/kakao`}>
+          <a href={`${process.env.NEXT_PUBLIC_serverURL}/oauth2/authorization/kakao`}
+              onClick={loginEvent}>
           <img
               src="/kakao_login.png"
               alt= "logo"

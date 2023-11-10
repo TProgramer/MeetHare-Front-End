@@ -28,8 +28,7 @@ export default function FindNearStation() {
     queryParams.append("stationName", searchValue);
     const queryString = queryParams.toString();
 
-    // `http://localhost:8080/map/myStation?${queryString}`
-    // `http://3.36.122.35:8080/map/myStation?${queryString}`
+ 
     // GET 요청 보내기
     fetch(`${process.env.NEXT_PUBLIC_serverURL}/map/myStation?${queryString}`, {
       method: "GET",
