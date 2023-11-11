@@ -41,7 +41,7 @@ export default function StartPoint({
     const queryString = queryParams.toString();
 
     // GET 요청 보내기
-    fetch(`https://meethare.site/map/myStation?${queryString}`, {
+    fetch(`${process.env.NEXT_PUBLIC_serverURL}/map/myStation?${queryString}`, {
       method: "GET",
     })
       .then((response) => {
