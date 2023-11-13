@@ -75,7 +75,7 @@ export default function Home() {
   const loadCategories = async (user_id: string) => {
     try {
       selectedOptions.user_id = user_id;
-      const apiUrl = `http://${process.env.NEXT_PUBLIC_serverURL}/place/priority/${user_id}`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_serverURL}/place/priority/${user_id}`;
       const response = await fetch(apiUrl);
 
       if (!response.ok) {
@@ -90,7 +90,7 @@ export default function Home() {
   };
   const savePreferences = async () => {
     try {
-      const apiUrl = `http://${process.env.NEXT_PUBLIC_serverURL}/place/priority`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_serverURL}/place/priority`;
       const response = await fetch(apiUrl, {
         method: "PUT",
         headers: {
