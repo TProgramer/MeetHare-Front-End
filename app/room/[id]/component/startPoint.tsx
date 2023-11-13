@@ -83,6 +83,8 @@ export default function StartPoint({
         if (!response.ok) {
           throw new Error("API 요청 실패");
         }
+        alert(`${Name}이 선택되었습니다.`)
+        window.location.reload();
         return response;
       })
       

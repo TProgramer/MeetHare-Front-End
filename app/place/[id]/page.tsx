@@ -169,7 +169,6 @@ export default function Place(props: any) {
                   ({
                     place_num,
                     place_name,
-                    place_grade,
                     place_address,
                     place_category,
                   }) => (

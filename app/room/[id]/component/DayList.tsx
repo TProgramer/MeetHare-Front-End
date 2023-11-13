@@ -110,6 +110,11 @@ export default function Daylist({
 
   return (
     <div>
+      {!isMaster() && (
+            <>
+              방장만이 선택할 수 있습니다
+            </>
+          )}
       {responseData && responseData.length > 0 && (
         <>
           <div>

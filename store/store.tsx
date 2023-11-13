@@ -19,6 +19,7 @@ type room = {
   periodStart: string;
   periodEnd: string;
   master: string;
+  roomId : number;
 };
 
 interface bearState {
@@ -43,6 +44,7 @@ const useRoomInfoStore = create<bearState>((set) => ({
     fixPlace: 0,
     fixStation: 0,
     submitNumber: 0,
+    roomId : 0,
     number: 0,
     periodStart: "",
     periodEnd: "",
