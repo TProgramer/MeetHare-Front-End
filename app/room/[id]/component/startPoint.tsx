@@ -79,18 +79,13 @@ export default function StartPoint({
           latitude: latitude,
         }),
       },
-    )
-      .then((response) => {
+    ).then((response) => {
         if (!response.ok) {
           throw new Error("API 요청 실패");
         }
         return response;
       })
-      .then((data) => {
-        // 여기에서 API 응답 데이터를 처리
-        //여기선 그냥 두기,
-        //마지막 요청일 경우 다음 것으로 넘기기
-      })
+      
       .catch((error) => {
       });
   };

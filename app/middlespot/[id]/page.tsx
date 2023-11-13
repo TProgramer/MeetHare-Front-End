@@ -7,12 +7,16 @@ import { useEffect, useState } from "react";
 import useRoomInfoStore from "store/store";
 
 export default function MiddleSpotRoom() {
+
+
+  //현재 방의 myRoomName , memberList , roominfo 불러오기
   const myRoomName = useRoomInfoStore((state) => state.myRoomName);
   const memberList = useRoomInfoStore((state) => state.memberList);
   const roominfo = useRoomInfoStore((state) => state.roominfo);
 
   const router = useRouter();
   const [userLocations, setUserLocations] = useState(memberList);
+  
 
   const handleFindLocationClick = () => {
     const newArray = userLocations.map((item) => ({
@@ -24,7 +28,7 @@ export default function MiddleSpotRoom() {
     console.log(JSON.stringify(newArray));
     // 사용자 위치 정보를 서버에 전달
 
-    fetch("http://3.36.122.35:8080/map/middlespot", {
+    fetch(`${process.env.NEXT_PUBLIC_serverURL}/map/middlespot`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -39,13 +43,8 @@ export default function MiddleSpotRoom() {
         return response.json();
       })
       .then((data) => {
-        console.log("API 응답 데이터:", data);
-        console.log(data.station);
-        // 여기에서 API 응답 데이터를 처리
-        // const stringifiedData = JSON.stringify(data)
-        // console.log(stringifiedData);
-        localStorage.setItem("station", JSON.stringify(data));
-        window.location.href = "/maps";
+        localStorage.setItem("stationList", JSON.stringify(data));
+        window.location.href = "/recommendMap";
       })
       .catch((error) => {
         console.error("API 요청 에러:", error);
@@ -79,13 +78,6 @@ export default function MiddleSpotRoom() {
               </button>
             </form>
           </div>
-          {/* <div className="relative h-full w-full">
-               <svg className="absolute inset-0 m-auto" viewBox="0 0 100 100" width="100" height="100">
-             
-               <circle stroke-width="7" stroke-dasharray="1px 1px" stroke-linecap="round" transform="rotate(-90 50 50)" cx="50" cy="50" r="45" fill="#DCFCE7" stroke="#22C55E" pathLength="1" stroke-dashoffset="0px"></circle> 
-                </svg>
-                <p className="absolute inset-0 mx-auto flex items-center justify-center font-display text-5xl text-green-500">100</p>
-                </div> */}
           <div className="flex h-60 items-center justify-center"></div>
         </div>
         <div className="mx-auto max-w-md text-center">
@@ -101,16 +93,10 @@ export default function MiddleSpotRoom() {
               </a>
               를 눌러 <br />
               약속장소를 정해보세요 <br />
-              {/* <code inline="true" class="rounded-sm bg-gray-100 px-1 py-0.5 font-mono font-medium text-gray-800">@next/font</code> and <code inline="true" class="rounded-sm bg-gray-100 px-1 py-0.5 font-mono font-medium text-gray-800">next/image
-              </code> for stellar performance. */}
             </p>
           </div>
         </div>
       </div>
-
-      {/* <button className="flex w-36 items-center justify-center rounded-md border border-gray-300 px-3 py-2 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100">
-        <p className="text-gray-600">Modal</p>
-      </button> */}
     </div>
   );
 }

@@ -48,7 +48,7 @@ const SignInModal = ({
         </div>
 
         <div className="flex flex-col space-y-4 bg-gray-50 px-4 py-8 md:px-16">
-          <a href={`${process.env.NEXT_PUBLIC_serverURL}/oauth2/authorization/kakao`}
+          <a 
               onClick={loginEvent}>
           <img
               src="/kakao_login.png"
