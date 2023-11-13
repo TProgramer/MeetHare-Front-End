@@ -5,7 +5,6 @@ import {
   SetStateAction,
   useCallback,
   useMemo,
-  useEffect,
 } from "react";
 
 interface PlaceDetailDTO {
@@ -55,7 +54,7 @@ const PlaceModal = ({
   };
   return (
     <Modal showModal={showPlaceModal} setShowModal={setShowPlaceModal}>
-      <div className="w-full overflow-hidden md:max-w-md md:rounded-2xl md:border md:border-gray-100 md:shadow-xl">
+      <div className="w-full overflow-auto md:max-w-md md:rounded-2xl md:border md:border-gray-100 md:shadow-xl">
         <div className="flex flex-col justify-center space-y-3 bg-white px-4 py-6 pt-8 text-center md:px-16">
           {modalData ? (
             <>

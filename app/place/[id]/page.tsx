@@ -113,7 +113,7 @@ export default function Place(props: any) {
         <div className="my-5 grid w-full max-w-screen-xl animate-fade-up grid-cols-1 gap-5 px-5 md:grid-cols-3 xl:px-0">
           <div className="sticky grid grid-cols-1 gap-5 md:grid-cols-3">
             <div className="flex-direction-row flex justify-between ">
-              {roomName !== "" && (
+              {roomName === "" && (
                 <>
                   <button
                     onClick={() => setCategory("restaurant")}
