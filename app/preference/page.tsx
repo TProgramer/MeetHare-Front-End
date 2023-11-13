@@ -108,7 +108,7 @@ export default function Home() {
       console.error("선호도 업데이트 중 에러 발생:", error);
     }
   };
-  const user_id: string = useRoomInfoStore((state: any) => state.userID);
+  const user_id: string = useRoomInfoStore((state: any) => state.userId);
   if (user_id !== "") loadCategories(user_id);
 
   const handleOptionClick = (category: string, option: string) => {
