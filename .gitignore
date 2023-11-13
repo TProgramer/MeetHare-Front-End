@@ -40,3 +40,8 @@ next-env.d.ts
 
 # misc
 .vscode
+
+# all other ignore list
+sw.*
+workbox-*
+swe-worker-*

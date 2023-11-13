@@ -6,11 +6,11 @@ import { useEffect, useState, useRef } from "react";
 import Button from "@mui/material/Button";
 import Link from "next/link";
 import localFont from "next/font/local";
-import { gmarketMedium, gmarketBold, gmarketLight } from "../fonts";
 // import { useEmblaCarousel } from "embla-carousel-react";
 import useEmblaCarousel from "embla-carousel-react";
 import "./embla.css";
 import { ReactNode } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Maps() {
   interface Station {
@@ -54,6 +54,7 @@ export default function Maps() {
   const [mapBound, setMapBound] = useState<any>([]);
   const [cardInfo, setCardInfo] = useState<userInfo[]>([]);
   const [pathInfo, setPathInfo] = useState<path[][]>([]);
+  const router = useRouter();
 
   const [viewportRef, embla] = useEmblaCarousel({
     loop: true,
@@ -202,11 +203,9 @@ export default function Maps() {
       <div className="z-10 flex w-full max-w-xl flex-col rounded-md px-5 xl:px-0">
         <div className="h-120 relative col-span-1 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md ">
           <div className="flex flex-col items-center justify-center">
-            <p className={`${gmarketMedium.className}`}>추천 장소는</p>
-            <p className={`${gmarketMedium.className} text-2xl`}>
-              {myStation.stationName}
-            </p>
-            <p className={`${gmarketMedium.className}`}>입니다</p>
+            <p className={``}>추천 장소는</p>
+            <p className={` text-2xl`}>{myStation.stationName}</p>
+            <p>입니다</p>
           </div>
           <br />
           <div className="grid place-items-center">
@@ -263,10 +262,7 @@ export default function Maps() {
                 <div className="embla__container">
                   {cardInfo.length > 0 &&
                     cardInfo.map((card, index) => (
-                      <div
-                        className={`${gmarketMedium.className} embla__slide`}
-                        key={index}
-                      >
+                      <div className={`embla__slide`} key={index}>
                         <div className="">{card.userId} 님</div>
                         <div>{card.minTime}분</div>
 
@@ -276,11 +272,15 @@ export default function Maps() {
                             .map((p: any) => (
                               <div key={card.userId}>
                                 <div>***</div>
-                                <div>{p.trafficType == 1 && <p>지하철</p>}</div>
-                                <div>{p.trafficType == 2 && <p>버스</p>}</div>
-                                <div>{p.trafficType == 3 && <p>걷기</p>}</div>
-                                <div>
-                                  {p.sectionTime && <p> {p.sectionTime}분</p>}
+                                <div className="flex flex-row">
+                                  <div>
+                                    {p.trafficType == 1 && <p>지하철</p>}
+                                  </div>
+                                  <div>{p.trafficType == 2 && <p>버스</p>}</div>
+                                  <div>{p.trafficType == 3 && <p>걷기</p>}</div>
+                                  <div>
+                                    {p.sectionTime && <p> {p.sectionTime}분</p>}
+                                  </div>
                                 </div>
                                 <div>
                                   {p.startName && <p> {p.startName}역 탑승</p>}
@@ -298,17 +298,10 @@ export default function Maps() {
             </div>
 
             <div className="flex justify-between">
-              <Button
-                variant="outlined"
-                className={`${gmarketMedium.className}`}
-              >
+              <Button variant="outlined" onClick={() => router.back()}>
                 리스트로 돌아가기
               </Button>
-              <Button
-                variant="outlined"
-                href={`/place/${station?.stationId}`}
-                className={`${gmarketMedium.className}`}
-              >
+              <Button variant="outlined" href={`/place/${station?.stationId}`}>
                 약속 장소 정하기
               </Button>
             </div>

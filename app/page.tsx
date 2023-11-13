@@ -5,6 +5,7 @@ import WebVitals from "@/components/home/web-vitals";
 import ComponentGrid from "@/components/home/component-grid";
 import Image from "next/image";
 import { nFormatter } from "@/lib/utils";
+import DownloadModalClient from "@/components/layout/download-modal";
 
 export default async function Home() {
   const { stargazers_count: stars } = await fetch(
@@ -23,8 +24,11 @@ export default async function Home() {
     .then((res) => res.json())
     .catch((e) => console.log(e));
 
+  // const { DownloadModal } = useDownloadModal();
+
   return (
     <>
+      <DownloadModalClient />
       <div className="z-10 w-full max-w-xl break-keep px-5 xl:px-0">
         {/* <a
           href="https://twitter.com/steventey/status/1613928948915920896"

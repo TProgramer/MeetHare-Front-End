@@ -22,3 +22,15 @@ export const gmarketLight = localFont({
 export const gmarketBold = localFont({
   src: "./GmarketSansBold.otf",
 })
+
+export const SCDreamThin = localFont({
+  src: "./SCDreamThin.otf",
+})
+
+export const SCDreamLight = localFont({
+  src: "./SCDreamLight.otf",
+})
+
+export const SCDreamNormal = localFont({
+  src: "./SCDreamNormal.otf",
+})

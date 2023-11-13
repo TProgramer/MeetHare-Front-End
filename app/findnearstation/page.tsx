@@ -17,6 +17,8 @@ export default function FindNearStation() {
     latitude: number;
   } | null>(null); // 클릭한 역 이름 상태 추가
 
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter(); // useRouter 훅 사용
   const searchParams = useSearchParams();
 
@@ -27,8 +29,8 @@ export default function FindNearStation() {
     const queryParams = new URLSearchParams();
     queryParams.append("stationName", searchValue);
     const queryString = queryParams.toString();
+    setLoading(true);
 
- 
     // GET 요청 보내기
     fetch(`${process.env.NEXT_PUBLIC_serverURL}/map/myStation?${queryString}`, {
       method: "GET",
@@ -46,6 +48,9 @@ export default function FindNearStation() {
       })
       .catch((error) => {
         console.error("API 요청 에러:", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -73,7 +78,7 @@ export default function FindNearStation() {
   // });
 
   return (
-    <div className="z-10 w-full max-w-xl px-5 xl:px-0">
+    <div className="z-10 flex w-full max-w-xl flex-col items-center justify-center px-5 xl:px-0">
       <a
         href="https://twitter.com/steventey/status/1613928948915920896"
         target="_blank"
@@ -115,9 +120,16 @@ export default function FindNearStation() {
                 <div>선택</div>
                 </>
             )} */}
+      {loading && (
+        <>
+          <div className="mt-4 flex grid w-36 place-items-center items-center justify-center rounded-md border border-gray-300">
+            찾는 중....
+          </div>
+        </>
+      )}
       {responseData && responseData.length > 0 && (
         <>
-          <div className="z-10 w-full max-w-xl px-5 xl:px-0">
+          <div className="z-10 flex w-full max-w-xl flex-col items-center justify-center px-5 xl:px-0">
             {responseData.map((data, index) => (
               <input
                 key={index}
