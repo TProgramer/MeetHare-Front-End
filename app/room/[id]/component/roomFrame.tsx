@@ -4,6 +4,7 @@ import { useState } from "react";
 import Calendar from "./CalendarComponent";
 import StartPoint from "./startPoint";
 import DayList from "./DayList";
+import Members from "./MembersModal";
 
 type user = {
   id: number;
@@ -47,7 +48,11 @@ export default function RoomFrame({
       className={`h-150 z-10 flex w-full max-w-xl flex-col overflow-hidden rounded-xl border border-gray-200 bg-white px-5 shadow-md xl:px-0`}
     >
       <div className="flex justify-between">
-        <div></div>
+        <div className="flex text-sm pt-4 font-bold">
+          <Members
+            userlist={roomdata.memberList.map((user) => user.nickName)}
+          />
+        </div>
         <div className="flex pt-4 text-2xl font-bold">
           {roomdata.myRoomName}
         </div>

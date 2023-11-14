@@ -136,6 +136,7 @@ export default function Maps() {
             setMapBound(bounds);
 
             setTimeout(() => {
+              console.log(mapRef);
               map = mapRef.current;
 
               linePath.forEach((line: any) => {
@@ -202,10 +203,10 @@ export default function Maps() {
     <>
       <div className="z-10 flex w-full max-w-xl flex-col rounded-md px-5 xl:px-0">
         <div className="h-120 relative col-span-1 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md ">
-          <div className="flex flex-col items-center justify-center">
-            <p className={``}>추천 장소는</p>
-            <p className={` text-2xl`}>{myStation.stationName}</p>
-            <p>입니다</p>
+          <br />
+          <div className="flex flex-row items-center justify-center">
+            추천 장소는 &nbsp;
+            <p className={` text-2xl`}>{myStation.stationName}</p>&nbsp; 입니다
           </div>
           <br />
           <div className="grid place-items-center">
@@ -262,41 +263,54 @@ export default function Maps() {
                 <div className="embla__container">
                   {cardInfo.length > 0 &&
                     cardInfo.map((card, index) => (
-                      <div className={`embla__slide`} key={index}>
-                        <div className="">{card.userId} 님</div>
-                        <div>{card.minTime}분</div>
-
-                        {pathInfo[index] &&
-                          pathInfo[index]
-                            .filter((info) => info.sectionTime != 0)
-                            .map((p: any) => (
-                              <div key={card.userId}>
-                                <div>***</div>
-                                <div className="flex flex-row">
-                                  <div>
-                                    {p.trafficType == 1 && <p>지하철</p>}
+                      <div className="embla__slide flex flex-col" key={index}>
+                        <div className="flex flex-row justify-between">
+                          <div className="text-xl">{card.userId} 님</div>
+                          <div>{card.minTime}분</div>
+                        </div>
+                        <br />
+                        <div className="text-xl">이동 경로</div>
+                        <div className="flex flex-col">
+                          {pathInfo[index] &&
+                            pathInfo[index]
+                              .filter((info) => info.sectionTime != 0)
+                              .map((p: any) => (
+                                <div className="my-3" key={card.userId}>
+                                  <div className="flex flex-row">
+                                    <div>
+                                      {p.trafficType == 1 && <p>지하철</p>}
+                                    </div>
+                                    &nbsp;
+                                    <div>{p.lane && p.lane[0].name}</div>
+                                    <div>
+                                      {p.trafficType == 2 && <p>버스</p>}
+                                    </div>
+                                    <div>
+                                      {p.trafficType == 3 && <p>걷기</p>}
+                                    </div>
+                                    &nbsp;
+                                    <div>
+                                      {p.sectionTime && (
+                                        <p> {p.sectionTime}분</p>
+                                      )}
+                                    </div>
                                   </div>
-                                  <div>{p.trafficType == 2 && <p>버스</p>}</div>
-                                  <div>{p.trafficType == 3 && <p>걷기</p>}</div>
-                                  <div>
-                                    {p.sectionTime && <p> {p.sectionTime}분</p>}
+                                  <div className="text-sm">
+                                    {p.startName && (
+                                      <p> {p.startName}역 탑승</p>
+                                    )}
+                                  </div>
+                                  <div className="text-sm">
+                                    {p.endName && <p> {p.endName}역 하차</p>}
                                   </div>
                                 </div>
-                                <div>
-                                  {p.startName && <p> {p.startName}역 탑승</p>}
-                                </div>
-                                <div>
-                                  {p.endName && <p> {p.endName}역 하차</p>}
-                                </div>
-                                <div>{p.lane && p.lane[0].name}</div>
-                              </div>
-                            ))}
+                              ))}
+                        </div>
                       </div>
                     ))}
                 </div>
               </div>
             </div>
-
             <div className="flex justify-between">
               <Button variant="outlined" onClick={() => router.back()}>
                 리스트로 돌아가기
