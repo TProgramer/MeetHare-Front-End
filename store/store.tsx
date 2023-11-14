@@ -1,7 +1,7 @@
 import create from "zustand";
-import { persist } from 'zustand/middleware';
+import { persist } from "zustand/middleware";
 
-const StorageKey = 'storage-key';
+const StorageKey = "storage-key";
 
 type member = {
   id: number;
@@ -22,15 +22,15 @@ type room = {
   periodStart: string;
   periodEnd: string;
   master: string;
-  roomId : number;
+  roomId: number;
 };
 
 interface bearState {
-  userId : number;
+  userId: number;
   myRoomName: string;
   memberList: member[];
   roominfo: room;
-  setUserId : any,
+  setUserId: any;
   setMyRoomName(newName: string): any;
   setMemberList(newMemberList: member[]): any;
   setRoomInfo(newRoomInfo: room): any;
@@ -39,33 +39,32 @@ interface bearState {
 const useRoomInfoStore = create(
   persist<bearState>(
     (set) => ({
-    userId : 0,
-    myRoomName: "",
-    memberList: [],
-    roominfo: {
-      category: "",
-      processivity: "",
-      fixDay: [],
-      fixPlace: 0,
-      fixStation: 0,
-      submitNumber: 0,
-      roomId : 0,
-      number: 0,
-      periodStart: "",
-      periodEnd: "",
-      master: "",
-    },
-    setUserId : (newUerId : number) => set({userId : newUerId}),
-    setMyRoomName: (newName: string) => set({ myRoomName: newName }),
-    setMemberList: (newMemberList: member[]) =>
-      set({ memberList: newMemberList }),
-    setRoomInfo: (newRoomInfo: room) => set({ roominfo: newRoomInfo }),
+      userId: 0,
+      myRoomName: "",
+      memberList: [],
+      roominfo: {
+        category: "",
+        processivity: "",
+        fixDay: [],
+        fixPlace: 0,
+        fixStation: 0,
+        submitNumber: 0,
+        roomId: 0,
+        number: 0,
+        periodStart: "",
+        periodEnd: "",
+        master: "",
+      },
+      setUserId: (newUerId: number) => set({ userId: newUerId }),
+      setMyRoomName: (newName: string) => set({ myRoomName: newName }),
+      setMemberList: (newMemberList: member[]) =>
+        set({ memberList: newMemberList }),
+      setRoomInfo: (newRoomInfo: room) => set({ roominfo: newRoomInfo }),
     }),
     {
-      name: StorageKey, 
+      name: StorageKey,
     },
   ),
 );
 
 export default useRoomInfoStore;
-

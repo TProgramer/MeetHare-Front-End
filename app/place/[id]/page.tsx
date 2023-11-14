@@ -39,7 +39,7 @@ export default function Place(props: any) {
   );
 
   const fixCategory = useRoomInfoStore((state: any) => state.roominfo.category);
-  if (fixCategory !== "") setCategory(fixCategory);
+
   const roomName = useRoomInfoStore((state: any) => state.myRoomName);
 
   const cardClick = async (placeNum: number) => {
@@ -65,14 +65,17 @@ export default function Place(props: any) {
   };
   const fetchPlaceList = async (stationNum: number) => {
     try {
+      if (fixCategory !== "") setCategory(fixCategory);
       const token = Cookies.get("Bearer");
+      console.log(fixCategory);
       if (token && roomName !== "") {
         const apiUrl = `${process.env.NEXT_PUBLIC_serverURL}/place/complex`;
         const requestData = {
-          station_id: stationNum,
+          station_id: Number(stationNum),
           category: fixCategory,
           user_list: memberList,
         };
+
         const JwtToken = `Bearer ${token}`;
         const response = await fetch(apiUrl, {
           method: "POST",
@@ -82,13 +85,12 @@ export default function Place(props: any) {
           },
           body: JSON.stringify(requestData),
         });
-
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-
-        const data: PlaceDTO[] = await response.json();
-        setCategoryList({ fixCategory: data });
+        const data = await response.json();
+        console.log(data);
+        setCategoryList(data);
       } else {
         const apiUrl = `${process.env.NEXT_PUBLIC_serverURL}/place/simple/${stationNum}`;
         const response = await fetch(apiUrl);

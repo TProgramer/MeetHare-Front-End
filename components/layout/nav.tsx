@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 import Navbar from "./navbar";
 import { useRouter } from "next/navigation";
 
 export default function Nav() {
   // jwtToken 변수를 useState로 선언하여 컴포넌트 상태로 사용
-  const [jwtToken, setJwtToken] = useState('');
+  const [jwtToken, setJwtToken] = useState("");
   const router = useRouter();
 
 
@@ -25,7 +25,7 @@ export default function Nav() {
 
   useEffect(() => {
     // 쿠키 읽기
-    const originPathCookie = Cookies.get('originpath');
+    const originPathCookie = Cookies.get("originpath");
 
     // 쿠키가 존재하면 처리
     if (originPathCookie) {

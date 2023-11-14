@@ -3,8 +3,12 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import useRoomInfoStore from "../../store/store";
+import Cookies from "js-cookie";
 
 export default function RecommendMap() {
+  const [jwtToken, setJwtToken] = useState<any>();
+
   const [loading, setLoading] = useState(false);
   interface userInfo {
     latitude: number;
@@ -29,10 +33,19 @@ export default function RecommendMap() {
     averageTime: number;
   }
 
+  const { roominfo } = useRoomInfoStore();
+
   const [stationNameList, setStationNameList] = useState<Recommend[]>([]);
   const router = useRouter(); // useRouter 훅 사용
 
   useEffect(() => {
+    const token = Cookies.get("Bearer");
+    // 쿠키 삭제
+    Cookies.remove("originpath");
+    if (token) {
+      setJwtToken(`Bearer ${token}`);
+    }
+
     const testFunction = () => {
       const stationList = localStorage.getItem("stationList");
 
@@ -85,8 +98,38 @@ export default function RecommendMap() {
                         className={` my-5 text-center text-lg hover:bg-purple-300 active:bg-purple-300`}
                         onClick={() => (
                           localStorage.setItem("station", JSON.stringify(data)),
-                          router.push("/maps"),
-                          setLoading(true)
+                          setLoading(true),
+                          fetch(
+                            `${process.env.NEXT_PUBLIC_serverURL}/user-manage/room/setstation`,
+                            {
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json",
+                                Authorization: jwtToken,
+                              },
+                              body: JSON.stringify({
+                                roomId: roominfo.roomId,
+                                station: data.station.stationId,
+                              }),
+                            },
+                          )
+                            .then((response) => {
+                              // 처리가 필요한 경우 여기에 추가적인 로직을 구현할 수 있습니다.
+                              if (!response.ok) {
+                                throw new Error(
+                                  `HTTP 오류! 상태 코드: ${response.status}`,
+                                );
+                              }
+
+                              return;
+                            })
+                            .then(() => {
+                              // fetch 요청이 완료된 후에 실행될 코드
+                              router.push("/maps");
+                            })
+                            .catch((error) => {
+                              console.error("API 요청 에러:", error);
+                            })
                         )}
                       >
                         <td>{data.station.stationName}</td>

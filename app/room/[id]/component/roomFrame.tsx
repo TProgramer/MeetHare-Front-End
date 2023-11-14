@@ -5,6 +5,7 @@ import Calendar from "./CalendarComponent";
 import StartPoint from "./startPoint";
 import DayList from "./DayList";
 import Members from "./MembersModal";
+import NotSubmitMembers from "./NotSubmitMembersModal"
 
 type user = {
   id: number;
@@ -12,6 +13,7 @@ type user = {
   stationName: string;
   latitude: number;
   longitude: number;
+  progress : string;
 };
 
 type SpecificRoomDTO = {
@@ -57,7 +59,16 @@ export default function RoomFrame({
           {roomdata.myRoomName}
         </div>
         <div className="pt-4 align-middle text-xl font-bold">
-          {roomdata.roominfo.submitNumber}/{roomdata.roominfo.number}
+          <NotSubmitMembers
+            submitNumber = {roomdata.roominfo.submitNumber}
+            totalNumber = {roomdata.roominfo.number}
+            userlist={roomdata.memberList.map((user) => ({
+              nickName : user.nickName,
+              progress : user.progress
+            }))}
+            roomProgress = {roomdata.roominfo.processivity}
+          />
+          
         </div>
       </div>
 

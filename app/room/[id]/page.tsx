@@ -15,6 +15,7 @@ export default function Room(props: any) {
     stationName: string;
     latitude: number;
     longitude: number;
+    progress:string;
   };
 
   type specificRoomDTO = {

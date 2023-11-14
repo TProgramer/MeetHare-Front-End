@@ -9,7 +9,7 @@ export default function CreateRoom() {
   const [roomName, setRoomName] = useState("");
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-  const [category, setCategory] = useState("RESTAURANT"); // 초기 카테고리 설정
+  const [category, setCategory] = useState("restaurant"); // 초기 카테고리 설정
   const [jwtToken, setJwtToken] = useState("");
   const [isRequestSuccess, setIsRequestSuccess] = useState(false); // 요청 성공 상태 추가
   const router = useRouter();
@@ -99,7 +99,7 @@ export default function CreateRoom() {
         setRoomName("");
         setStartDate(null);
         setEndDate(null);
-        setCategory("RESTAURANT");
+        setCategory("restaurant");
         setIsRequestSuccess(true);
       } else {
         // 서버 응답이 실패인 경우 처리
@@ -140,10 +140,10 @@ export default function CreateRoom() {
               onChange={handleCategoryChange}
               className="my-2 w-full rounded-md border px-4 py-2 text-center"
             >
-              <option value="RESTAURANT">음식점</option>
-              <option value="STUDY">공부</option>
-              <option value="ACTIVITY">액티비티</option>
-              <option value="WATCH">관람</option>
+              <option value="restaurant">음식점</option>
+              <option value="study">공부</option>
+              <option value="activity">액티비티</option>
+              <option value="culture">관람</option>
             </select>
           </div>
 
@@ -154,6 +154,7 @@ export default function CreateRoom() {
               selected={startDate}
               onChange={handleStartDateChange}
               placeholderText="기간 시작"
+              minDate={new Date()} // 오늘부터
               dateFormat="yyyy-MM-dd"
               className="my-2 w-full rounded-md border px-20 py-2 text-center"
             />
