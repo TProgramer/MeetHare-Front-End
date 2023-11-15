@@ -15,7 +15,7 @@ type room = {
   category: string;
   processivity: string;
   fixDay: any[];
-  fixPlace: number;
+  fixPlace: string;
   fixStation: number;
   submitNumber: number;
   number: number;
@@ -34,6 +34,7 @@ interface bearState {
   setMyRoomName(newName: string): any;
   setMemberList(newMemberList: member[]): any;
   setRoomInfo(newRoomInfo: room): any;
+  setFixPlace(newPlace: string): any;
 }
 
 const useRoomInfoStore = create(
@@ -46,7 +47,7 @@ const useRoomInfoStore = create(
         category: "",
         processivity: "",
         fixDay: [],
-        fixPlace: 0,
+        fixPlace: "",
         fixStation: 0,
         submitNumber: 0,
         roomId: 0,
@@ -60,6 +61,10 @@ const useRoomInfoStore = create(
       setMemberList: (newMemberList: member[]) =>
         set({ memberList: newMemberList }),
       setRoomInfo: (newRoomInfo: room) => set({ roominfo: newRoomInfo }),
+      setFixPlace: (newPlace: string) =>
+        set((state) => ({
+          roominfo: { ...state.roominfo, fixPlace: newPlace },
+        })),
     }),
     {
       name: StorageKey,

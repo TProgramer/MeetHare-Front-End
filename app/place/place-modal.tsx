@@ -9,6 +9,7 @@ import {
 } from "react";
 import useRoomInfoStore from "../../store/store";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 interface PlaceDetailDTO {
   place_num: number;
@@ -31,8 +32,12 @@ const PlaceModal = ({
   setModalData: Dispatch<SetStateAction<PlaceDetailDTO | null>>;
 }) => {
   const [toastMessage, setToastMessage] = useState("");
+  const router = useRouter();
   let roomName = useRoomInfoStore((state: any) => state.roominfo.roomId);
   let roomId = useRoomInfoStore((state: any) => state.roominfo.roomId);
+  let room = useRoomInfoStore((state: any) => state.roominfo);
+  let { setFixPlace } = useRoomInfoStore();
+
   let removeToast: NodeJS.Timeout;
   function toast(text: string) {
     const toast = document.getElementById("toast");
@@ -59,29 +64,7 @@ const PlaceModal = ({
   };
   const confirmPlace = async () => {
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_serverURL}/place/priority`; //API 경로 수정 필요
-      let requestData;
-      // 이 부분 수정해서 데이터 수정
-      // if (modalData !== null)
-      //   requestData = {
-      //     roomId: useRoomInfoStore((state: any) => state.roominfo.roomId),
-      //     place: modalData.place_address + " " + modalData.place_address,
-      //   };
-      const token = Cookies.get("Bearer");
-      const JwtToken = `Bearer ${token}`;
-      const response = await fetch(apiUrl, {
-        method: "POST", // method 확인
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: JwtToken,
-          body: JSON.stringify(requestData),
-        },
-      });
-
-      if (!response.ok)
-        throw new Error(`HTTP error! Status: ${response.status}`);
-
-      if (response.ok) await sendConfirmPlace();
+      await sendConfirmPlace();
 
       // 페이지 변경 내용 추가
     } catch (error) {
@@ -90,13 +73,15 @@ const PlaceModal = ({
   };
   const sendConfirmPlace = async () => {
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_serverURL}/room/setplace`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_serverURL}/user-manage/room/setplace`;
       let requestData;
+      let fixAddress;
       if (modalData !== null)
-        requestData = {
-          roomId: roomId,
-          place: modalData.place_address + " " + modalData.place_address,
-        };
+        fixAddress = modalData.place_name + "\n" + modalData.place_address;
+      requestData = {
+        roomId: roomId,
+        place: fixAddress,
+      };
       const token = Cookies.get("Bearer");
       const JwtToken = `Bearer ${token}`;
       const response = await fetch(apiUrl, {
@@ -104,12 +89,15 @@ const PlaceModal = ({
         headers: {
           "Content-Type": "application/json",
           Authorization: JwtToken,
-          body: JSON.stringify(requestData),
         },
+        body: JSON.stringify(requestData),
       });
-
       if (!response.ok)
         throw new Error(`HTTP error! Status: ${response.status}`);
+      else if (fixAddress) {
+        setFixPlace(fixAddress);
+        router.push("/final");
+      }
     } catch (error) {
       console.error("진행정보 업데이트 중 에러 발생:", error);
     }

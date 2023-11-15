@@ -31,7 +31,7 @@ const categoriesData: { name: string; options: string[] }[] = [
       "고기",
       "양식",
       "치킨",
-      "중삭",
+      "중식",
       "국수",
       "분식",
     ],

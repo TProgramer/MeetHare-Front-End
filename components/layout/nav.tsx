@@ -10,17 +10,13 @@ export default function Nav() {
   const [jwtToken, setJwtToken] = useState("");
   const router = useRouter();
 
-
-
   useEffect(() => {
     // 클라이언트 측에서 "jwtToken" 키의 쿠키를 가져오기
-    const token = Cookies.get('Bearer');
+    const token = Cookies.get("Bearer");
 
     if (token) {
       setJwtToken(`Bearer ${token}`); // 토큰을 상태로 설정
     }
-    
-
   }, []);
 
   useEffect(() => {
@@ -34,6 +30,5 @@ export default function Nav() {
     }
   }, []); // 컴포넌트가 마운트될 때 한 번만 실행
 
-  
   return <Navbar token={jwtToken} />;
 }
