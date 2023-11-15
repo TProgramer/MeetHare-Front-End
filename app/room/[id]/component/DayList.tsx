@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type Props = {
   roomId: string;
@@ -12,18 +12,12 @@ type Props = {
   submitNumber: number;
 };
 
-type datelist = {
-  dateList: string[];
-};
-
 export default function Daylist({
   roomId,
   periodStart,
   periodEnd,
   token,
   master,
-  totalNumber,
-  submitNumber,
 }: Props) {
   useEffect(() => {
     getAllImpossiTime();
@@ -31,7 +25,6 @@ export default function Daylist({
 
   const [fixDate, setFixDate] = useState("");
   const [responseData, setResponseData] = useState<string[] | null>(null);
-  const router = useRouter();
 
   const handleDateClick = (date: any) => {
     setFixDate(date.data);
@@ -73,8 +66,7 @@ export default function Daylist({
         .then(() => {
           // 여기에서 API 응답 데이터를 처리
         });
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const getAllImpossiTime = async () => {
@@ -104,17 +96,12 @@ export default function Daylist({
           // 여기에서 API 응답 데이터를 처리
           setResponseData(data.dateList); // 전체 응답 데이터를 상태에 저장
         });
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   return (
     <div>
-      {!isMaster() && (
-            <>
-              방장만이 선택할 수 있습니다
-            </>
-          )}
+      {!isMaster() && <>방장만이 선택할 수 있습니다</>}
       {responseData && responseData.length > 0 && (
         <>
           <div>

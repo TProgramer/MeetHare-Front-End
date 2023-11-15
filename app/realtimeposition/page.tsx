@@ -9,8 +9,6 @@ const WebSocketPage = () => {
   const [userName, setUserName] = useState("test1");
   const [channelId, setChannelId] = useState("chaeyeong");
   const [startStation, setStartStation] = useState<Station[]>([]);
-  //useState<Station | null>(null);
-  //
   interface Station {
     stationId?: number;
     stationName?: string;
@@ -49,8 +47,6 @@ const WebSocketPage = () => {
     stompClient.current.activate();
 
     stompClient.current.onConnect = (frame) => {
-      console.log("Stomp Connected:", frame);
-
       // Stomp 서버로 메시지를 보내는 로직
       const locationData = {
         type: "message",
@@ -68,7 +64,6 @@ const WebSocketPage = () => {
 
       // Stomp 서버에서 메시지를 받는 로직
       stompClient.current?.subscribe(`/sub/channel/${channelId}`, (message) => {
-        console.log(JSON.parse(message.body));
         position.push(JSON.parse(message.body));
         // setStartStation 초기화시키고
         // 여기서 받는 바디들을
@@ -91,8 +86,6 @@ const WebSocketPage = () => {
           channelId: channelId,
           data: { latitude, longitude },
         };
-
-        console.log(latitude, longitude);
 
         // Stomp 서버로 메시지 보내기
         stompClient.current?.publish({

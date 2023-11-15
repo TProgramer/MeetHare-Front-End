@@ -1,16 +1,11 @@
 "use client";
 /*global kakao*/
-// import KakaoMap from 'components/layout/maps';
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import { useEffect, useState, useRef } from "react";
 import Button from "@mui/material/Button";
-import Link from "next/link";
-import localFont from "next/font/local";
-// import { useEmblaCarousel } from "embla-carousel-react";
 import useEmblaCarousel from "embla-carousel-react";
 import "./embla.css";
-import { ReactNode } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function Maps() {
   interface Station {
@@ -81,14 +76,10 @@ export default function Maps() {
               setStation(jsonValue.station);
               setStartStation(jsonValue.list as Station[]);
               setCardInfo(jsonValue.list as userInfo[]);
-              console.log(jsonValue.list as userInfo[]);
-              console.log(jsonValue.list);
               const pathArr: path[][] = [];
               jsonValue.list.forEach((user: any) => {
-                console.log(JSON.parse(user.minPath));
                 pathArr.push(JSON.parse(user.minPath));
               });
-              console.log(pathArr);
               setPathInfo(pathArr);
 
               // setCardInfo(jsonValue.list);
@@ -112,11 +103,8 @@ export default function Maps() {
 
               // 지도에 표시할 선을 생성합니다
               var subLinePath: any[] = [];
-              // console.log(JSON.parse(Station.transPath));
               JSON.parse(Station.transPath).result.path[0].subPath.forEach(
                 (subPath: any) => {
-                  // console.log(subPath);
-
                   if (subPath.trafficType != 1) {
                     return;
                   }
@@ -136,7 +124,6 @@ export default function Maps() {
             setMapBound(bounds);
 
             setTimeout(() => {
-              console.log(mapRef);
               map = mapRef.current;
 
               linePath.forEach((line: any) => {
@@ -165,7 +152,6 @@ export default function Maps() {
       });
 
       const endStation = document.getElementById("endStation");
-      console.log(endStation);
     };
 
     kakaoMapScript.addEventListener("load", onLoadKakaoAPI);
@@ -175,7 +161,6 @@ export default function Maps() {
     if (embla && cardInfo.length > 0) {
       embla.reInit();
     }
-    console.log(cardInfo);
   }, [embla, cardInfo]);
 
   const [station, setStation] = useState<Station | null>(null);
@@ -189,14 +174,6 @@ export default function Maps() {
     infracount: station?.infracount || "",
     userId: station?.userId || "",
   };
-
-  // const carouselInfo: carousel = {
-  //   userInfo: cardInfo,
-  //   path: pathInfo,
-  // };
-
-  // console.log(carouselInfo);
-
   const [isOpen, setIsOpen] = useState(false);
 
   return (

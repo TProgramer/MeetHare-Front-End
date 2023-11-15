@@ -1,9 +1,6 @@
 "use client";
-import Link from "next/link";
 import { useEffect, useState, ReactNode } from "react";
 import Cookies from "js-cookie";
-import { type } from "os";
-import local from "./styles.module.css";
 import RoomFrame from "./component/roomFrame";
 import { useRouter, usePathname } from "next/navigation";
 import useRoomInfoStore from "../../../store/store";
@@ -15,7 +12,7 @@ export default function Room(props: any) {
     stationName: string;
     latitude: number;
     longitude: number;
-    progress:string;
+    progress: string;
   };
 
   type specificRoomDTO = {
@@ -34,14 +31,8 @@ export default function Room(props: any) {
     roominfo: any;
   };
 
-  const {
-    setUserId,
-    setMyRoomName,
-    setMemberList,
-    setRoomInfo,
-  } = useRoomInfoStore();
-
-  
+  const { setUserId, setMyRoomName, setMemberList, setRoomInfo } =
+    useRoomInfoStore();
 
   const [jwtToken, setJwtToken] = useState("");
   const [fixCalendarDates, setFixCalendarDates] = useState<Date[]>([]);
@@ -58,15 +49,15 @@ export default function Room(props: any) {
       try {
         const token = Cookies.get("Bearer");
         // 쿠키 삭제
-        Cookies.remove('originpath');
+        Cookies.remove("originpath");
         if (token) {
           setJwtToken(`Bearer ${token}`);
           await fetchDataWithToken(`Bearer ${token}`);
         } else {
           const currentUri = window.location.href;
-          Cookies.set('originpath', currentUri, {
-            damain : "meethare.site",
-            path: '/',
+          Cookies.set("originpath", currentUri, {
+            damain: "meethare.site",
+            path: "/",
           });
           alert("로그인 해주세요");
           location.href = `${process.env.NEXT_PUBLIC_serverURL}/oauth2/authorization/kakao`;
@@ -78,10 +69,6 @@ export default function Room(props: any) {
 
     fetchData();
   }, []);
-
-  
-
-
 
   useEffect(() => {
     // jwtToken을 사용하여 API 호출 시 Authorization 헤더에 토큰을 설정
@@ -116,7 +103,7 @@ export default function Room(props: any) {
           setMemberList(res?.memberList);
           setRoomInfo(res?.roominfo);
           setUserId(res?.userId);
-          
+
           router.push(`/middlespot/${props.params.id}`);
         } else if (
           res.roominfo.processivity === "RecommendPlace" ||

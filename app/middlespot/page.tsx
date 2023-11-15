@@ -1,14 +1,11 @@
 "use client";
 
-import { Long_Cang } from "next/font/google";
-import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function MiddleSpot() {
   const router = useRouter();
 
-  const stationNameList: Array<any> = [];
   const [loading, setLoading] = useState(false);
   const [userLocations, setUserLocations] = useState<location[]>([]);
 
@@ -25,7 +22,7 @@ export default function MiddleSpot() {
       userId: `${userLocations.length + 1} `,
       latitude: 0,
       longitude: 0,
-      stationName: " ",
+      stationName: "",
     };
     setUserLocations([...userLocations, newLocation]);
   };
@@ -57,43 +54,47 @@ export default function MiddleSpot() {
       proseElement.style.marginTop = `${margin}px`;
     }
   }, [userLocations]);
-  // setUserLocations(prev => [...prev, userId : "일채영"])
   // 버튼 클릭 시 사용자 위치 정보를 콘솔에 출력
   const handleFindLocationClick = () => {
-    userLocations.forEach((location, index) => {
-      console.log(
-        `사용자 위치: ${location.userId}, 위도: ${location.latitude}, 경도: ${location.longitude}`,
-      );
-      console.log(JSON.stringify(userLocations));
-    });
-    // 사용자 위치 정보를 서버에 전달
-    setLoading(true);
-    console.log(JSON.stringify({ locations: userLocations, stationNumber: 3 }));
-    fetch(`${process.env.NEXT_PUBLIC_serverURL}/map/middlespot`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // body: JSON.stringify({ locations: userLocations }),
-      body: JSON.stringify(userLocations),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("API 요청 실패");
+    if (userLocations.length <= 1) {
+      alert("2개 이상의 출발지를 입력해주세요.");
+    } else {
+      const hasEmptyStationName = userLocations.some((location) => {
+        if (location.stationName.length === 0) {
+          alert("입력되지 않은 출발지가 있어요.");
+          return true; // 반복문 종료
         }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("API 응답 데이터:", data);
-
-        localStorage.setItem("stationList", JSON.stringify(data));
-        window.location.href = "/recommendMap";
-      })
-      .catch((error) => {
-        console.error("API 요청 에러:", error);
-        setLoading(false);
-        alert("다시 시도해주세요!");
+        return false; // 다음 반복 진행
       });
+
+      if (hasEmptyStationName) {
+        return; // 함수 종료
+      }
+      // 사용자 위치 정보를 서버에 전달
+      setLoading(true);
+      fetch(`${process.env.NEXT_PUBLIC_serverURL}/map/middlespot`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userLocations),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("API 요청 실패");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          localStorage.setItem("stationList", JSON.stringify(data));
+          window.location.href = "/recommendMap";
+        })
+        .catch((error) => {
+          console.error("API 요청 에러:", error);
+          setLoading(false);
+          alert("다시 시도해주세요!");
+        });
+    }
   };
 
   return (
@@ -155,13 +156,6 @@ export default function MiddleSpot() {
                 </div>
               </form>
             </div>
-            {/* <div className="relative h-full w-full">
-               <svg className="absolute inset-0 m-auto" viewBox="0 0 100 100" width="100" height="100">
-             
-               <circle stroke-width="7" stroke-dasharray="1px 1px" stroke-linecap="round" transform="rotate(-90 50 50)" cx="50" cy="50" r="45" fill="#DCFCE7" stroke="#22C55E" pathLength="1" stroke-dashoffset="0px"></circle> 
-                </svg>
-                <p className="absolute inset-0 mx-auto flex items-center justify-center font-display text-5xl text-green-500">100</p>
-                </div> */}
             <div className="mx-auto max-w-md text-center">
               <div
                 id="ProseContainer"
@@ -178,8 +172,6 @@ export default function MiddleSpot() {
                   </a>
                   를 눌러 <br />
                   약속장소를 정해보세요 <br />
-                  {/* <code inline="true" class="rounded-sm bg-gray-100 px-1 py-0.5 font-mono font-medium text-gray-800">@next/font</code> and <code inline="true" class="rounded-sm bg-gray-100 px-1 py-0.5 font-mono font-medium text-gray-800">next/image
-              </code> for stellar performance. */}
                 </p>
               </div>
             </div>
@@ -208,10 +200,6 @@ export default function MiddleSpot() {
           <div>적절한 중간 지점 찾는 중...</div>
         </div>
       )}
-
-      {/* <button className="flex w-36 items-center justify-center rounded-md border border-gray-300 px-3 py-2 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100">
-        <p className="text-gray-600">Modal</p>
-      </button> */}
     </div>
   );
 }

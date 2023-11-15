@@ -19,7 +19,7 @@ export default function NextForce({
   const fetchData = async () => {
     // 데이터를 가져오기 전에 로딩 상태를 활성화
 
-    if(totalNumber <=1){
+    if (totalNumber <= 1) {
       alert("2명 이상 참가해야 합니다");
       window.location.reload();
       return;
@@ -58,7 +58,6 @@ export default function NextForce({
             "Content-Type": "application/json",
             Authorization: token,
           },
-          // body: JSON.stringify({ locations: userLocations }),
           body: JSON.stringify({ roomId: roomId }),
         },
       );

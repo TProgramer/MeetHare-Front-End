@@ -37,7 +37,6 @@ export default function Nav() {
         if (sub) {
           // send subscription to server to be saved
           // parse string version of the json to get the expected object structure
-          console.log("Already subscribed");
         }
         // check if subscription is not exist and the process is for initial generation
         // if (!sub && !onlyRefreshToken) {
@@ -54,22 +53,9 @@ export default function Nav() {
             .then(function (subscribe) {
               // send subscription to server to be saved
               // parse string version of the json to get the expected object structure
-              const res = fetch(
-                `${process.env.NEXT_PUBLIC_serverURL}/webpush`,
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    Authorization: token,
-                  },
-                  body: JSON.stringify(subscribe),
-                },
-              );
-              // 구독 취소
-              // const unsubscribed = await subscription.unsubscribe();
             })
             .catch((e) => {
-              console.log(e);
+              console.error(e);
             });
         }
       });

@@ -24,7 +24,6 @@ export default function FindNearStation() {
 
   // 검색 버튼을 클릭했을 때 호출될 이벤트 핸들러
   const handleSearchClick = () => {
-    console.log("검색어:", searchValue);
     // URL 매개변수 생성
     const queryParams = new URLSearchParams();
     queryParams.append("stationName", searchValue);
@@ -43,7 +42,6 @@ export default function FindNearStation() {
       })
       .then((data) => {
         // 여기에서 API 응답 데이터를 처리
-        console.log("API 응답 데이터:", data);
         setResponseData(data); // 전체 응답 데이터를 상태에 저장
       })
       .catch((error) => {
@@ -59,28 +57,12 @@ export default function FindNearStation() {
     longitude: number,
     latitude: number,
   ) => {
-    console.log("클릭한 역 이름:", stationName);
-    console.log("Longitude:", longitude);
-    console.log("Latitude:", latitude);
     setSelectedStation({ stationName, longitude, latitude });
   };
-
-  // const setUserPlaceData {
-  //     fetch("")
-  // }
-  // router.push({
-  //     pathname: '/middleSpot', // middleSpot 페이지 경로
-  //     query: { // 선택한 역의 정보를 query 파라미터로 전달
-  //         stationName,
-  //         longitude,
-  //         latitude,
-  //     },
-  // });
 
   return (
     <div className="z-10 flex w-full max-w-xl flex-col items-center justify-center px-5 xl:px-0">
       <a
-        href="https://twitter.com/steventey/status/1613928948915920896"
         target="_blank"
         rel="noreferrer"
         className="mx-auto mb-5 flex max-w-fit animate-fade-up items-center justify-center space-x-2 overflow-hidden rounded-full bg-blue-100 px-7 py-2 transition-colors hover:bg-blue-200"

@@ -1,11 +1,10 @@
 "use client";
 import React from "react";
-import { useState } from "react";
 import Calendar from "./CalendarComponent";
 import StartPoint from "./startPoint";
 import DayList from "./DayList";
 import Members from "./MembersModal";
-import NotSubmitMembers from "./NotSubmitMembersModal"
+import NotSubmitMembers from "./NotSubmitMembersModal";
 
 type user = {
   id: number;
@@ -13,7 +12,7 @@ type user = {
   stationName: string;
   latitude: number;
   longitude: number;
-  progress : string;
+  progress: string;
 };
 
 type SpecificRoomDTO = {
@@ -50,7 +49,7 @@ export default function RoomFrame({
       className={`h-150 z-10 flex w-full max-w-xl flex-col overflow-hidden rounded-xl border border-gray-200 bg-white px-5 shadow-md xl:px-0`}
     >
       <div className="flex justify-between">
-        <div className="flex text-sm pt-4 font-bold">
+        <div className="flex pt-4 text-sm font-bold">
           <Members
             userlist={roomdata.memberList.map((user) => user.nickName)}
           />
@@ -60,15 +59,14 @@ export default function RoomFrame({
         </div>
         <div className="pt-4 align-middle text-xl font-bold">
           <NotSubmitMembers
-            submitNumber = {roomdata.roominfo.submitNumber}
-            totalNumber = {roomdata.roominfo.number}
+            submitNumber={roomdata.roominfo.submitNumber}
+            totalNumber={roomdata.roominfo.number}
             userlist={roomdata.memberList.map((user) => ({
-              nickName : user.nickName,
-              progress : user.progress
+              nickName: user.nickName,
+              progress: user.progress,
             }))}
-            roomProgress = {roomdata.roominfo.processivity}
+            roomProgress={roomdata.roominfo.processivity}
           />
-          
         </div>
       </div>
 

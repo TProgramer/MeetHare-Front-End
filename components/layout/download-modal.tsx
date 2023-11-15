@@ -9,8 +9,6 @@ import {
   useEffect,
 } from "react";
 
-import Image from "next/image";
-
 const DownloadModal = ({
   showDownloadModal,
   setShowDownloadModal,
@@ -26,7 +24,6 @@ const DownloadModal = ({
 
   const [isInstalledForIOSChrome, setIsInstalledIOSChrome] =
     useState<boolean>(false);
-  // const [showInstalled, setShowInstalled] = useState<boolean>(false);
 
   // test values
   let device = "chrome";

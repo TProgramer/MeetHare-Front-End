@@ -1,9 +1,7 @@
 "use client";
 
-import { Long_Cang } from "next/font/google";
-import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import useRoomInfoStore from "store/store";
 
 export default function MiddleSpotRoom() {
@@ -31,7 +29,6 @@ export default function MiddleSpotRoom() {
       headers: {
         "Content-Type": "application/json",
       },
-      // body: JSON.stringify({ locations: userLocations }),
       body: JSON.stringify(newArray),
     })
       .then((response) => {
@@ -41,7 +38,6 @@ export default function MiddleSpotRoom() {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         localStorage.setItem("stationList", JSON.stringify(data));
         window.location.href = "/recommendMap";
       })

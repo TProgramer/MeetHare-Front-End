@@ -1,10 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Cookies from "js-cookie";
-
 import Popover from "@/components/shared/popover";
-import Image from "next/image";
 
 type Props = {
   submitNumber: number;

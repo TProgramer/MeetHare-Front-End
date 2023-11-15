@@ -67,7 +67,6 @@ export default function Place(props: any) {
     try {
       if (fixCategory !== "") setCategory(fixCategory);
       const token = Cookies.get("Bearer");
-      console.log(fixCategory);
       if (token && roomName !== "") {
         const apiUrl = `${process.env.NEXT_PUBLIC_serverURL}/place/complex`;
         const requestData = {
@@ -89,7 +88,6 @@ export default function Place(props: any) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        console.log(data);
         setCategoryList(data);
       } else {
         const apiUrl = `${process.env.NEXT_PUBLIC_serverURL}/place/simple/${stationNum}`;

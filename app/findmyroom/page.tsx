@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState, ReactNode } from "react";
+import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import Card from "./card";
 import { useRouter } from "next/navigation";

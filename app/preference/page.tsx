@@ -102,8 +102,6 @@ export default function Home() {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-
-      console.log("선호도가 업데이트되었습니다.");
     } catch (error) {
       console.error("선호도 업데이트 중 에러 발생:", error);
     }

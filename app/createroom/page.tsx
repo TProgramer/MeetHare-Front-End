@@ -46,7 +46,6 @@ export default function CreateRoom() {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    console.log(jwtToken);
     if (jwtToken === "") {
       alert("로그인 하십시오");
       router.push("/");

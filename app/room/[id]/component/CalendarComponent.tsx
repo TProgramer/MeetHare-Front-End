@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import NextForce from "./nextForce";
-import { setDate } from "date-fns";
 import KakaoShare from "./KakaoShare";
 
 type user = {
@@ -45,8 +44,6 @@ export default function CalendarComponent({
   const nickNameList = memberList.map((user) => user.nickName);
 
   const formattedString = nickNameList.join(" , ");
-
-  // const nickNameList = memberList.map(user => user.nickName);
 
   const [selectedDates, setSelectedDates] = useState<Date[]>(fixCalendarDates); // 초기 선택 날짜를 사용자가 제공한 날짜로 설정
   useEffect(() => {
@@ -149,8 +146,7 @@ export default function CalendarComponent({
           window.location.reload();
         }
       })
-      .catch(() => {
-      });
+      .catch(() => {});
   };
 
   return (

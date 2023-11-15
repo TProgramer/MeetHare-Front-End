@@ -1,7 +1,5 @@
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
-import cx from "classnames";
-import { sfPro, inter } from "./fonts";
 import Nav from "@/components/layout/nav";
 import { Suspense } from "react";
 import { SCDreamNormal } from "./fonts";

@@ -2,13 +2,9 @@
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import { useEffect, useState, useRef } from "react";
 import Button from "@mui/material/Button";
-import Link from "next/link";
-import localFont from "next/font/local";
-// import { useEmblaCarousel } from "embla-carousel-react";
 import useEmblaCarousel from "embla-carousel-react";
 import "./embla.css";
-import { ReactNode } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type Props = {
   roomId: string;
@@ -25,7 +21,7 @@ type user = {
   longitude: number;
 };
 
-export default function Final({ roomId, token, memberList, stationId }: Props) {
+export default function Final({ roomId, memberList, stationId }: Props) {
   interface Station {
     stationId: number;
     stationName: string;
@@ -58,10 +54,6 @@ export default function Final({ roomId, token, memberList, stationId }: Props) {
     subwayCode: number;
   }
 
-  interface carousel {
-    userInfo: userInfo[];
-    path: path[];
-  }
   const [data, setData] = useState<any>({});
   const [startStation, setStartStation] = useState<Station[]>([]);
   const [mapBound, setMapBound] = useState<any>([]);
@@ -95,17 +87,11 @@ export default function Final({ roomId, token, memberList, stationId }: Props) {
               setStation(jsonValue.station);
               setStartStation(jsonValue.list as Station[]);
               setCardInfo(jsonValue.list as userInfo[]);
-              console.log(jsonValue.list as userInfo[]);
-              console.log(jsonValue.list);
               const pathArr: path[][] = [];
               jsonValue.list.forEach((user: any) => {
-                console.log(JSON.parse(user.minPath));
                 pathArr.push(JSON.parse(user.minPath));
               });
-              console.log(pathArr);
               setPathInfo(pathArr);
-
-              // setCardInfo(jsonValue.list);
               resolve(jsonValue.list); // jsonValue를 반환합니다.
             } else {
               reject(new Error("Unable to get station data")); // 에러 처리
@@ -114,7 +100,6 @@ export default function Final({ roomId, token, memberList, stationId }: Props) {
         };
 
         var linePath: any[] = [];
-        // var polyline: any = undefined;
         var polyline: any[] = [];
 
         fetchData()
@@ -126,11 +111,8 @@ export default function Final({ roomId, token, memberList, stationId }: Props) {
 
               // 지도에 표시할 선을 생성합니다
               var subLinePath: any[] = [];
-              // console.log(JSON.parse(Station.transPath));
               JSON.parse(Station.transPath).result.path[0].subPath.forEach(
                 (subPath: any) => {
-                  // console.log(subPath);
-
                   if (subPath.trafficType != 1) {
                     return;
                   }
@@ -150,7 +132,6 @@ export default function Final({ roomId, token, memberList, stationId }: Props) {
             setMapBound(bounds);
 
             setTimeout(() => {
-              console.log(mapRef);
               map = mapRef.current;
 
               linePath.forEach((line: any) => {
@@ -179,7 +160,6 @@ export default function Final({ roomId, token, memberList, stationId }: Props) {
       });
 
       const endStation = document.getElementById("endStation");
-      console.log(endStation);
     };
 
     kakaoMapScript.addEventListener("load", onLoadKakaoAPI);
@@ -194,14 +174,12 @@ export default function Final({ roomId, token, memberList, stationId }: Props) {
       latitude: item.latitude,
       longitude: item.longitude,
     }));
-    const roomnumber = { roomId };
     const stationNumber = { stationId };
     fetch(`${process.env.NEXT_PUBLIC_serverURL}/map/meetingPlace`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      // body: JSON.stringify({ locations: userLocations }),
       body: JSON.stringify({ locations: newArray, ...stationNumber }),
     })
       .then((response) => {
@@ -213,7 +191,6 @@ export default function Final({ roomId, token, memberList, stationId }: Props) {
       .then((data) => {
         setData(data);
         localStorage.setItem("meetingPlace", JSON.stringify(data));
-        console.log(data);
       })
       .catch((error) => {
         console.error("API 요청 에러:", error);
@@ -224,7 +201,6 @@ export default function Final({ roomId, token, memberList, stationId }: Props) {
     if (embla && cardInfo.length > 0) {
       embla.reInit();
     }
-    console.log(cardInfo);
   }, [embla, cardInfo]);
 
   const [station, setStation] = useState<Station | null>(null);
@@ -238,13 +214,6 @@ export default function Final({ roomId, token, memberList, stationId }: Props) {
     infracount: station?.infracount || "",
     userId: station?.userId || "",
   };
-
-  // const carouselInfo: carousel = {
-  //   userInfo: cardInfo,
-  //   path: pathInfo,
-  // };
-
-  // console.log(carouselInfo);
 
   const [isOpen, setIsOpen] = useState(false);
 

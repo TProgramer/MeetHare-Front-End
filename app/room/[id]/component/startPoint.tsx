@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 type Props = {
@@ -18,7 +18,6 @@ export default function StartPoint({
   // 유저 검색어를 저장할 상태 변수
   const [searchValue, setSearchValue] = useState("");
   // 서버에서 온 검색결과를 저장할 상태 변수
-  // const [responseData, setResponseData] = useState<{ stationName: string }[] | null>(null);
 
   const [responseData, setResponseData] = useState<
     { stationName: string; longitude: number; latitude: number }[] | null
@@ -54,8 +53,7 @@ export default function StartPoint({
         // 여기에서 API 응답 데이터를 처리
         setResponseData(data); // 전체 응답 데이터를 상태에 저장
       })
-      .catch((error) => {
-      });
+      .catch((error) => {});
   };
 
   //제출버튼
@@ -79,17 +77,17 @@ export default function StartPoint({
           latitude: latitude,
         }),
       },
-    ).then((response) => {
+    )
+      .then((response) => {
         if (!response.ok) {
           throw new Error("API 요청 실패");
         }
-        alert(`${Name}이 선택되었습니다.`)
+        alert(`${Name}이 선택되었습니다.`);
         window.location.reload();
         return response;
       })
-      
-      .catch((error) => {
-      });
+
+      .catch((error) => {});
   };
 
   const handleStationClick = (
@@ -99,18 +97,6 @@ export default function StartPoint({
   ) => {
     setSelectedStation({ stationName, longitude, latitude });
   };
-
-  // const setUserPlaceData {
-  //     fetch("")
-  // }
-  // router.push({
-  //     pathname: '/middleSpot', // middleSpot 페이지 경로
-  //     query: { // 선택한 역의 정보를 query 파라미터로 전달
-  //         stationName,
-  //         longitude,
-  //         latitude,
-  //     },
-  // });
 
   return (
     <div className="z-10 w-full max-w-xl px-5 xl:px-0">
