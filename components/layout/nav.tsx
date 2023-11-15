@@ -14,10 +14,67 @@ export default function Nav() {
     // 클라이언트 측에서 "jwtToken" 키의 쿠키를 가져오기
     const token = Cookies.get("Bearer");
 
-    if (token) {
-      setJwtToken(`Bearer ${token}`); // 토큰을 상태로 설정
+    if (!token) return;
+    setJwtToken(`Bearer ${token}`); // 토큰을 상태로 설정
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then((registration) => {
+          console.log(
+            "Service Worker registered with scope:",
+            registration.scope,
+          );
+        })
+        .catch((error) => {
+          console.error("Service Worker registration failed:", error);
+        });
     }
-  }, []);
+
+    navigator.serviceWorker.ready.then((reg) => {
+      reg.pushManager.getSubscription().then(function (sub) {
+        // check if subscription is already exist
+        if (sub) {
+          // send subscription to server to be saved
+          // parse string version of the json to get the expected object structure
+          console.log("Already subscribed");
+        }
+        // check if subscription is not exist and the process is for initial generation
+        // if (!sub && !onlyRefreshToken) {
+        else if (jwtToken !== "") {
+          // ask for permission
+          Notification.requestPermission();
+
+          //generate subscription object
+          reg.pushManager
+            .subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+            })
+            .then(function (subscribe) {
+              // send subscription to server to be saved
+              // parse string version of the json to get the expected object structure
+              const res = fetch(
+                `${process.env.NEXT_PUBLIC_serverURL}/webpush`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: token,
+                  },
+                  body: JSON.stringify(subscribe),
+                },
+              );
+              // 구독 취소
+              // const unsubscribed = await subscription.unsubscribe();
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        }
+      });
+    });
+  }, [jwtToken]);
 
   useEffect(() => {
     // 쿠키 읽기

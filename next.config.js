@@ -1,3 +1,4 @@
+// 참고 - https://ducanh-next-pwa.vercel.app/docs/next-pwa/custom-worker
 const withPWA = require("@ducanh2912/next-pwa").default({
   dest: "public",
   cacheOnFrontEndNav: true,
@@ -8,6 +9,9 @@ const withPWA = require("@ducanh2912/next-pwa").default({
   workboxOptions: {
     disableDevLogs: true,
   },
+  register: true,
+  skipWaiting: true,
+  customWorkerDir: "worker",
   // ... other options you like
 });
 

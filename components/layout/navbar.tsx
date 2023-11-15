@@ -31,7 +31,6 @@ export default function NavBar({ token }: { token: String | null }) {
             ></Image>
           </Link>
           <div>
-
             {token ? (
               <UserDropdown token={token} />
             ) : (
