@@ -109,8 +109,17 @@ export default function Home() {
     }
   };
   const user_id: string = useRoomInfoStore((state: any) => state.userId);
-  if (user_id !== "") loadCategories(user_id);
+  useEffect(() => {
+    if (user_id !== "") loadCategories(user_id);
+  }, []);
 
+  const handlequiteClick = (category: string, option: boolean) => {
+    if (selectedOptions[category] === option) {
+      setSelectedOptions({ ...selectedOptions, [category]: true });
+    } else {
+      setSelectedOptions({ ...selectedOptions, [category]: false });
+    }
+  };
   const handleOptionClick = (category: string, option: string) => {
     if (selectedOptions[category] === option) {
       setSelectedOptions({ ...selectedOptions, [category]: "" });
@@ -157,9 +166,7 @@ export default function Home() {
                           ? `#FFFFFF`
                           : "",
                       }}
-                      onClick={() =>
-                        handleOptionClick(categoryData.name, "조용한 장소")
-                      }
+                      onClick={() => handlequiteClick(categoryData.name, false)}
                     >
                       {categoryData.options[0]}
                     </button>
