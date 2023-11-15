@@ -68,6 +68,7 @@ export default function MiddleSpot() {
     });
     // 사용자 위치 정보를 서버에 전달
     setLoading(true);
+    console.log(JSON.stringify({ locations: userLocations, stationNumber: 3 }));
     fetch(`${process.env.NEXT_PUBLIC_serverURL}/map/middlespot`, {
       method: "POST",
       headers: {
@@ -84,11 +85,7 @@ export default function MiddleSpot() {
       })
       .then((data) => {
         console.log("API 응답 데이터:", data);
-        // data.forEach((station: any) => stationNameList.push(station));
 
-        // 여기에서 API 응답 데이터를 처리
-        // const stringifiedData = JSON.stringify(data)
-        // console.log(stringifiedData);
         localStorage.setItem("stationList", JSON.stringify(data));
         window.location.href = "/recommendMap";
       })
