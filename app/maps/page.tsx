@@ -311,7 +311,7 @@ export default function Maps() {
                 </div>
               </div>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-around">
               <Button variant="outlined" onClick={() => router.back()}>
                 리스트로 돌아가기
               </Button>

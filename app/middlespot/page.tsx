@@ -91,9 +91,8 @@ export default function MiddleSpot() {
       })
       .catch((error) => {
         console.error("API 요청 에러:", error);
-      })
-      .finally(() => {
         setLoading(false);
+        alert("다시 시도해주세요!");
       });
   };
 
@@ -125,7 +124,7 @@ export default function MiddleSpot() {
                     </button>
                     <button
                       type="button"
-                      className="ml-2 text-red-600"
+                      className="ml-2 text-red-400"
                       onClick={() => handleRemoveLocation(index)}
                     >
                       <p className="text-sm font-bold">위치 제거</p>

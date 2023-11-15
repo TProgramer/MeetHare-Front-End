@@ -48,28 +48,21 @@ export default function RecommendMap() {
 
     const testFunction = () => {
       const stationList = localStorage.getItem("stationList");
-
       if (stationList != null) {
         const stationData = JSON.parse(stationList);
-
-        console.log(stationData);
-        console.log(1);
         for (var i = 0; i < stationData.length; i++) {
           var avg = 0;
           for (var j = 0; j < stationData[i].list.length; j++) {
             avg += stationData[i].list[j].minTime;
           }
-          console.log("avg = ", Math.floor(avg / stationData[i].list.length));
-
           stationData[i].averageTime = Math.floor(
             avg / stationData[i].list.length,
           );
-          console.log(2);
         }
         setStationNameList(stationData);
       }
     };
-    console.log(3);
+
     testFunction();
   }, []);
 
@@ -92,6 +85,7 @@ export default function RecommendMap() {
                 </thead>
                 <tbody>
                   {stationNameList?.length > 0 &&
+                    jwtToken != undefined &&
                     stationNameList.map((data, index) => (
                       <tr
                         key={index}
@@ -130,6 +124,23 @@ export default function RecommendMap() {
                             .catch((error) => {
                               console.error("API 요청 에러:", error);
                             })
+                        )}
+                      >
+                        <td>{data.station.stationName}</td>
+                        <td>{data.averageTime}</td>
+                        <td>{data.station.infraCount}</td>
+                      </tr>
+                    ))}
+                  {stationNameList?.length > 0 &&
+                    jwtToken == undefined &&
+                    stationNameList.map((data, index) => (
+                      <tr
+                        key={index}
+                        className={` my-5 text-center text-lg hover:bg-purple-300 active:bg-purple-300`}
+                        onClick={() => (
+                          localStorage.setItem("station", JSON.stringify(data)),
+                          setLoading(true),
+                          router.push("/maps")
                         )}
                       >
                         <td>{data.station.stationName}</td>
