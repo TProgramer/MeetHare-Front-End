@@ -37,13 +37,15 @@ export default function UserDropdown({ token }: { token: String }) {
           <>
             <div className="flex-direction-column flex">
               <button
-                className="w-3/5 rounded bg-blue-300 px-6 py-2 font-bold text-white hover:bg-blue-400"
+                className="mx-1 rounded-lg px-6 py-3 font-bold text-white hover:bg-blue-400"
+                style={{ backgroundColor: "#9381FF" }}
                 onClick={handleLogout}
               >
                 로그아웃
               </button>
               <button
-                className="w-3/5 rounded bg-blue-300 px-6 py-2 font-bold text-white hover:bg-blue-400"
+                className="mx-1 rounded-lg px-6 py-3 font-bold text-white hover:bg-blue-400"
+                style={{ backgroundColor: "#9381FF" }}
                 onClick={preference}
               >
                 좋아하는 것

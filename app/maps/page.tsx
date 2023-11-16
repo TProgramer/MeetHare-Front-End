@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import useEmblaCarousel from "embla-carousel-react";
 import "./embla.css";
 import { useRouter } from "next/navigation";
+import useRoomInfoStore from "../../store/store";
 
 export default function Maps() {
   interface Station {
@@ -45,6 +46,7 @@ export default function Maps() {
     path: path[];
   }
 
+  const { roominfo } = useRoomInfoStore();
   const [startStation, setStartStation] = useState<Station[]>([]);
   const [mapBound, setMapBound] = useState<any>([]);
   const [cardInfo, setCardInfo] = useState<userInfo[]>([]);
@@ -73,8 +75,10 @@ export default function Maps() {
             const myValue = localStorage.getItem("station");
             if (myValue != null) {
               const jsonValue = JSON.parse(myValue);
+              console.log(jsonValue);
               setStation(jsonValue.station);
               setStartStation(jsonValue.list as Station[]);
+              console.log(jsonValue.list);
               setCardInfo(jsonValue.list as userInfo[]);
               const pathArr: path[][] = [];
               jsonValue.list.forEach((user: any) => {
@@ -224,9 +228,7 @@ export default function Maps() {
                       onMouseOut={() => setIsOpen(false)}
                     >
                       {isOpen && (
-                        <div style={{ color: "#000" }}>
-                          {Station.userId}1111
-                        </div>
+                        <div style={{ color: "#000" }}>{Station.userId}</div>
                       )}
                     </MapMarker>
                   ))}
@@ -241,51 +243,68 @@ export default function Maps() {
                   {cardInfo.length > 0 &&
                     cardInfo.map((card, index) => (
                       <div className="embla__slide flex flex-col" key={index}>
-                        <div className="flex justify-between">
-                          <div className="text-2xl">&lt;</div>
-                          <div className="text-2xl">&gt;</div>
-                        </div>
+                        <div className="flex justify-between"></div>
                         <div className="flex flex-row justify-between">
-                          <div className="text-xl">{card.userId} 님</div>
+                          {roominfo.roomId != 0 && (
+                            <div className="text-xl">{card.userId} 님</div>
+                          )}
+                          {roominfo.roomId == 0 && (
+                            <div className="text-xl">
+                              {startStation[index].stationName} 출발
+                            </div>
+                          )}
                           <div>{card.minTime}분</div>
                         </div>
                         <br />
-                        <div className="text-xl">이동 경로</div>
-                        <div className="flex flex-col">
-                          {pathInfo[index] &&
-                            pathInfo[index]
-                              .filter((info) => info.sectionTime != 0)
-                              .map((p: any) => (
-                                <div className="my-3" key={card.userId}>
-                                  <div className="flex flex-row">
-                                    <div>
-                                      {p.trafficType == 1 && <p>지하철</p>}
+                        <div className="text-center text-xl">이동 경로</div>
+                        <div className="flex flex-row justify-between">
+                          <div className="flex flex-col justify-center text-2xl">
+                            &lt;
+                          </div>
+                          <div>
+                            {pathInfo[index] &&
+                              pathInfo[index]
+                                .filter((info) => info.sectionTime != 0)
+                                .map((p: any) => (
+                                  <div className="my-3" key={card.userId}>
+                                    <div className="flex flex-row items-center justify-center">
+                                      <div>
+                                        {p.trafficType == 1 && <p>지하철 🚉</p>}
+                                      </div>
+                                      &nbsp;
+                                      <div>{p.lane && p.lane[0].name}</div>
+                                      <div>
+                                        {p.trafficType == 2 && <p>버스 🚌</p>}
+                                      </div>
+                                      <div>
+                                        {p.trafficType == 3 && <p>걷기 🚶</p>}
+                                      </div>
+                                      &nbsp;
+                                      <div>
+                                        {p.sectionTime && (
+                                          <p> {p.sectionTime}분</p>
+                                        )}
+                                      </div>
                                     </div>
-                                    &nbsp;
-                                    <div>{p.lane && p.lane[0].name}</div>
-                                    <div>
-                                      {p.trafficType == 2 && <p>버스</p>}
-                                    </div>
-                                    <div>
-                                      {p.trafficType == 3 && <p>걷기</p>}
-                                    </div>
-                                    &nbsp;
-                                    <div>
-                                      {p.sectionTime && (
-                                        <p> {p.sectionTime}분</p>
+                                    <div className="text-center text-sm">
+                                      {p.startName && (
+                                        <p> {p.startName}역 탑승</p>
                                       )}
                                     </div>
+                                    <div className="text-center text-sm">
+                                      {p.endName && <p> {p.endName}역 하차</p>}
+                                    </div>
+                                    <hr />
                                   </div>
-                                  <div className="text-sm">
-                                    {p.startName && (
-                                      <p> {p.startName}역 탑승</p>
-                                    )}
-                                  </div>
-                                  <div className="text-sm">
-                                    {p.endName && <p> {p.endName}역 하차</p>}
-                                  </div>
-                                </div>
-                              ))}
+                                ))}
+                          </div>
+                          <div className="flex flex-col justify-center text-2xl">
+                            &gt;
+                          </div>
+                        </div>
+                        <br />
+                        <div className="items-align flex justify-center">
+                          {index + 1} / {cardInfo.length}
                         </div>
                       </div>
                     ))}

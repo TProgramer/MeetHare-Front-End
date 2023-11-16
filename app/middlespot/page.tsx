@@ -42,6 +42,7 @@ export default function MiddleSpot() {
   }, []);
 
   useEffect(() => {
+    localStorage.removeItem("storage-key");
     // userLocations가 업데이트될 때마다 높이를 조절
     const container = document.getElementById("MiddleSpotContainer");
     const proseElement = document.getElementById("ProseContainer");
@@ -56,7 +57,6 @@ export default function MiddleSpot() {
   }, [userLocations]);
   // 버튼 클릭 시 사용자 위치 정보를 콘솔에 출력
   const handleFindLocationClick = () => {
-    var temp = "";
     const stationNameCounts: any = {};
     if (userLocations.length <= 1) {
       alert("2개 이상의 출발지를 입력해주세요.");
@@ -69,7 +69,7 @@ export default function MiddleSpot() {
           alert("동일한 출발지가 입력되었어요.");
           return true;
         }
-        temp = location.stationName;
+
         stationNameCounts[location.stationName] =
           (stationNameCounts[location.stationName] || 0) + 1;
         return false; // 다음 반복 진행
@@ -136,28 +136,28 @@ export default function MiddleSpot() {
                       className="ml-2 text-red-400"
                       onClick={() => handleRemoveLocation(index)}
                     >
-                      <p className="text-sm font-bold">위치 제거</p>
+                      <p className="ml-2 text-sm font-bold">X</p>
                     </button>
                   </div>
                 ))}
                 <div className="flex items-center justify-center">
                   <button
-                    className="ml-3 pt-4 text-center"
+                    className="my-2 flex w-24 items-center justify-center rounded-md border border-gray-300 px-3 py-2 text-center transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
                     type="button"
                     onClick={handleAddLocation}
                   >
-                    <h2 className="! bg-gradient-to-br from-black to-stone-500 bg-clip-text font-display text-sm font-bold text-blue-600 text-transparent [text-wrap:balance] md:text-3xl md:font-normal">
+                    <h2 className="! bg-gradient-to-br from-black to-stone-500 bg-clip-text font-display text-sm font-bold text-transparent md:font-normal">
                       위치 추가
                     </h2>
                   </button>
                 </div>
                 <div className="flex items-center justify-center">
                   <button
-                    className="ml-3 pt-4 text-center"
+                    className="justify-center rounded-md border border-gray-300 p-2 text-center"
                     type="button"
                     onClick={handleFindLocationClick}
                   >
-                    <h2 className="bg-gradient-to-br from-black to-stone-500 bg-clip-text font-display text-xl font-bold text-transparent [text-wrap:balance] md:text-3xl md:font-normal">
+                    <h2 className="bg-gradient-to-br from-black to-stone-500 bg-clip-text font-display text-xl font-bold text-transparent md:font-normal">
                       중간지점 찾기
                     </h2>
                   </button>

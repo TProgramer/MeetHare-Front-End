@@ -118,10 +118,28 @@ export default function CreateRoom() {
   return (
     <div className="z-10 w-full max-w-xl rounded-xl border  border-gray-200 bg-white px-5 shadow-md xl:px-0">
       <div className="flex h-10 items-center justify-center"></div>
+      <div className="flex">
+        <img
+          src="/question-logo.png"
+          alt="question-logo"
+          style={{ width: "20px", height: "20px" }}
+        />
+        <div className="mx-2 text-sm">
+          <p className="font-bold">기간이 무엇을 의미하는지 아시나요?</p>
+          <p className="font-bold">
+            바로, 약속 가능한 날짜의 기간을 의미한답니다!
+          </p>
+          <p className="mt-1 text-xs">
+            만약 1월 1일부터 1월 5일 중 약속을 가지고 싶다면 &apos;기간
+            시작&apos;에 1월 1일을, &apos;기간 종료&apos;에 1월 5일을 입력하면
+            된답니다!
+          </p>
+        </div>
+      </div>
       <div className="mx-auto max-w-md text-center">
         <h2 className="mt-4 bg-gradient-to-br from-black to-stone-500 bg-clip-text font-display text-xl font-bold text-transparent [text-wrap:balance] md:text-3xl md:font-normal"></h2>
         <form onSubmit={handleSubmit}>
-          <div className="flex h-10 items-center justify-center">
+          <div className="my-1 flex h-10 items-center justify-center">
             <input
               type="text"
               placeholder="방 제목"
@@ -133,7 +151,7 @@ export default function CreateRoom() {
 
           <div className="flex h-2"></div>
 
-          <div className="flex h-10 items-center justify-center">
+          <div className="my-1 flex h-10 items-center justify-center">
             <select
               value={category}
               onChange={handleCategoryChange}
@@ -148,7 +166,7 @@ export default function CreateRoom() {
 
           <div className="flex h-2"></div>
 
-          <div className="flex h-10 w-full items-center justify-center">
+          <div className="my-1 flex h-10 w-full items-center justify-center">
             <DatePicker
               selected={startDate}
               onChange={handleStartDateChange}
@@ -161,7 +179,7 @@ export default function CreateRoom() {
 
           <div className="flex h-2"></div>
 
-          <div className="flex h-10 items-center justify-center">
+          <div className="my-1 flex h-10 items-center justify-center">
             <DatePicker
               selected={endDate}
               onChange={handleEndDateChange}
@@ -178,7 +196,8 @@ export default function CreateRoom() {
           <div className="flex h-10 items-center justify-center">
             <button
               type="submit"
-              className="rounded-md bg-blue-500 px-4 py-2 text-white"
+              className="rounded-md px-4 py-2 text-white"
+              style={{ backgroundColor: "#9381FF" }}
             >
               방 생성
             </button>

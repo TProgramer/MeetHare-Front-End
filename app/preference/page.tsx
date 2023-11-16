@@ -105,7 +105,7 @@ export default function Home() {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      alert("선호도가 업데이트 되었습니다.");
+      alert("저장 성공!");
       router.push("/");
     } catch (error) {
       console.error("선호도 업데이트 중 에러 발생:", error);

@@ -45,6 +45,9 @@ export default function RecommendMap() {
       setJwtToken(`Bearer ${token}`);
     }
 
+    console.log(1);
+    console.log(roominfo);
+
     const testFunction = () => {
       const stationList = localStorage.getItem("stationList");
       if (stationList != null) {
@@ -85,10 +88,11 @@ export default function RecommendMap() {
                 <tbody>
                   {stationNameList?.length > 0 &&
                     jwtToken != undefined &&
+                    roominfo.roomId != 0 &&
                     stationNameList.map((data, index) => (
                       <tr
                         key={index}
-                        className={` my-5 text-center text-lg hover:bg-purple-300 active:bg-purple-300`}
+                        className={`my-5 text-center text-lg hover:bg-purple-300 active:bg-purple-300`}
                         onClick={() => (
                           localStorage.setItem("station", JSON.stringify(data)),
                           setLoading(true),
@@ -127,15 +131,21 @@ export default function RecommendMap() {
                       >
                         <td>{data.station.stationName}</td>
                         <td>{data.averageTime}</td>
-                        <td>{data.station.infraCount}</td>
+                        <td>
+                          {(Math.round((data.station.infraCount / 200) * 100) *
+                            10) /
+                            10}{" "}
+                          %
+                        </td>
                       </tr>
                     ))}
                   {stationNameList?.length > 0 &&
-                    jwtToken == undefined &&
+                    jwtToken != undefined &&
+                    roominfo.roomId != 0 &&
                     stationNameList.map((data, index) => (
                       <tr
                         key={index}
-                        className={` my-5 text-center text-lg hover:bg-purple-300 active:bg-purple-300`}
+                        className={`my-5 text-center text-lg hover:bg-purple-300 active:bg-purple-300`}
                         onClick={() => (
                           localStorage.setItem("station", JSON.stringify(data)),
                           setLoading(true),
@@ -144,7 +154,34 @@ export default function RecommendMap() {
                       >
                         <td>{data.station.stationName}</td>
                         <td>{data.averageTime}</td>
-                        <td>{data.station.infraCount}</td>
+                        <td>
+                          {(Math.round((data.station.infraCount / 200) * 100) *
+                            10) /
+                            10}{" "}
+                          %
+                        </td>
+                      </tr>
+                    ))}
+                  {stationNameList?.length > 0 &&
+                    jwtToken == undefined &&
+                    stationNameList.map((data, index) => (
+                      <tr
+                        key={index}
+                        className={`my-5 text-center text-lg hover:bg-purple-300 active:bg-purple-300`}
+                        onClick={() => (
+                          localStorage.setItem("station", JSON.stringify(data)),
+                          setLoading(true),
+                          router.push("/maps")
+                        )}
+                      >
+                        <td>{data.station.stationName}</td>
+                        <td>{data.averageTime}</td>
+                        <td>
+                          {(Math.round((data.station.infraCount / 200) * 100) *
+                            10) /
+                            10}{" "}
+                          %
+                        </td>
                       </tr>
                     ))}
                 </tbody>
