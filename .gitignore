@@ -42,7 +42,7 @@ next-env.d.ts
 .vscode
 
 # all other ignore list
-# sw.*
-# workbox-*
-# swe-worker-*
-# worker-*
+sw.*
+workbox-*
+swe-worker-*
+worker-*

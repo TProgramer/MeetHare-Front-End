@@ -241,6 +241,10 @@ export default function Maps() {
                   {cardInfo.length > 0 &&
                     cardInfo.map((card, index) => (
                       <div className="embla__slide flex flex-col" key={index}>
+                        <div className="flex justify-between">
+                          <div className="text-2xl">&lt;</div>
+                          <div className="text-2xl">&gt;</div>
+                        </div>
                         <div className="flex flex-row justify-between">
                           <div className="text-xl">{card.userId} 님</div>
                           <div>{card.minTime}분</div>
@@ -288,6 +292,7 @@ export default function Maps() {
                 </div>
               </div>
             </div>
+
             <div className="flex justify-around">
               <Button variant="outlined" onClick={() => router.back()}>
                 리스트로 돌아가기

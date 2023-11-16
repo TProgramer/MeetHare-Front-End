@@ -14,9 +14,18 @@ export default function Nav() {
     // 클라이언트 측에서 "jwtToken" 키의 쿠키를 가져오기
     const token = Cookies.get("Bearer");
 
-    if (!token) return;
-    setJwtToken(`Bearer ${token}`); // 토큰을 상태로 설정
+    if (token) setJwtToken(`Bearer ${token}`); // 토큰을 상태로 설정
+    else {
+      const token =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImV4cCI6MTcwMDkwNTY1OCwiZW1haWwiOiI4ZWQzNmU4Yi1mZTA4LTQ5NzctYWUwNi1hOWU0NWNkZTEzOGNAc29jaWFsVXNlci5jb20ifQ.X1TZLCUlcow_cE1HlUBAUUfHGti8AGoP2OeKHPkJDdeLoNjETH3LgBKKViX5hMN1sPzZT61bAwvfeTZUDw_u2A";
+      Cookies.set("Bearer", token, {
+        damain: "localhost:3000",
+        path: "/",
+      });
+      setJwtToken(`Bearer Bearer ${token}`);
+    }
 
+    if (token === undefined) return;
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
         .register("/sw.js")
@@ -53,6 +62,19 @@ export default function Nav() {
             .then(function (subscribe) {
               // send subscription to server to be saved
               // parse string version of the json to get the expected object structure
+              const res = fetch(
+                `${process.env.NEXT_PUBLIC_serverURL}/webpush`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: token,
+                  },
+                  body: JSON.stringify(subscribe),
+                },
+              );
+              // 구독 취소
+              // const unsubscribed = await subscription.unsubscribe();
             })
             .catch((e) => {
               console.error(e);

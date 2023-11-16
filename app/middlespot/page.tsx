@@ -56,6 +56,8 @@ export default function MiddleSpot() {
   }, [userLocations]);
   // 버튼 클릭 시 사용자 위치 정보를 콘솔에 출력
   const handleFindLocationClick = () => {
+    var temp = "";
+    const stationNameCounts: any = {};
     if (userLocations.length <= 1) {
       alert("2개 이상의 출발지를 입력해주세요.");
     } else {
@@ -63,7 +65,13 @@ export default function MiddleSpot() {
         if (location.stationName.length === 0) {
           alert("입력되지 않은 출발지가 있어요.");
           return true; // 반복문 종료
+        } else if (stationNameCounts[location.stationName]) {
+          alert("동일한 출발지가 입력되었어요.");
+          return true;
         }
+        temp = location.stationName;
+        stationNameCounts[location.stationName] =
+          (stationNameCounts[location.stationName] || 0) + 1;
         return false; // 다음 반복 진행
       });
 
@@ -138,7 +146,7 @@ export default function MiddleSpot() {
                     type="button"
                     onClick={handleAddLocation}
                   >
-                    <h2 className="bg-gradient-to-br from-black to-stone-500 bg-clip-text font-display text-sm font-bold text-blue-600 text-transparent [text-wrap:balance] md:text-3xl md:font-normal">
+                    <h2 className="! bg-gradient-to-br from-black to-stone-500 bg-clip-text font-display text-sm font-bold text-blue-600 text-transparent [text-wrap:balance] md:text-3xl md:font-normal">
                       위치 추가
                     </h2>
                   </button>
