@@ -183,7 +183,7 @@ export default function CalendarComponent({
 
               return isDateSelected ||
                 (isInitialDateSelected && !isdeletedSelected) ? (
-                <div style={{ color: "green" }}>✔</div>
+                <div className="redText">❌</div>
               ) : null;
             }
           }}

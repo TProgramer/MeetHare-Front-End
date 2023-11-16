@@ -1,22 +1,74 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { Client } from "@stomp/stompjs";
-import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { useEffect, useState, useRef } from "react";
+import { Client, StompSubscription } from "@stomp/stompjs";
+import Cookies from "js-cookie";
+import useRoomInfoStore from "store/store";  
 
+declare global {
+  interface Window {
+    kakao: any;
+  }
+}
+ 
 const WebSocketPage = () => {
+  
   const stompClient = useRef<Client | null>(null);
-  const [userName, setUserName] = useState("test1");
-  const [channelId, setChannelId] = useState("chaeyeong");
+  const [userName, setUserName] = useState("");
+  const [channelId, setChannelId] = useState("");
   const [startStation, setStartStation] = useState<Station[]>([]);
+  const [targetStationLong, setTargetStationLong] = useState(0);
+  const [targetStationLat, setTargetStationLat] = useState(0);
+  const [isSharingLocation, setIsSharingLocation] = useState(false);
+
+  const { myRoomName, roominfo } = useRoomInfoStore();
+  const { fixStation } = roominfo;
+  const coodRef = useRef({lat: null, lng: null});
+ 
+
+  const token = Cookies.get("Bearer");
+  if(token && userName ==="" ){
+    const base64Payload = token.substring(7).split(".")[1]; // value 0 -> header, 1 -> payload, 2 -> VERIFY SIGNATURE
+    const payload = Buffer.from(base64Payload, "base64");
+    const result = JSON.parse(payload.toString()); 
+    setUserName(result.nickName);
+    setChannelId(myRoomName);
+
+    console.log(userName);
+    console.log(channelId);
+  }
+ 
+
+  // 출발지 좌표를 가져오기 위한 fetch
+  useEffect(() => {
+    const fetchStationInfo = async () => {
+      try {
+        const encodedFixStation = encodeURIComponent(fixStation);
+        const response = await fetch(`http://localhost:8080/map/getStationInfo?fixStation=${encodedFixStation}`);
+        const data = await response.json(); 
+        // 가져온 데이터를 사용할 수 있습니다.
+        console.log('여기여기여기여기:', data);
+ 
+        console.log('경도 :', data[0].longitude);
+        console.log('위도 :', data[0].latitude);
+        setTargetStationLong(data[0].longitude);
+        setTargetStationLat(data[0].latitude);
+
+      } catch (error) {
+        console.error("Error fetching station info:", error);
+      }
+    };
+
+    // 페이지 로딩 시 한 번 실행
+    fetchStationInfo();
+  }, []);
+
+ 
+
   interface Station {
-    stationId?: number;
-    stationName?: string;
+    stationId?: number; 
     longitude: number;
     latitude: number;
-    transPath?: string;
-    infracount?: string;
-    userId: string;
   }
 
   interface RealTimePosition {
@@ -47,31 +99,19 @@ const WebSocketPage = () => {
     stompClient.current.activate();
 
     stompClient.current.onConnect = (frame) => {
-      // Stomp 서버로 메시지를 보내는 로직
-      const locationData = {
-        type: "message",
-        sender: userName,
-        channelId: channelId,
-        data: { latitude: "latitude", longitude: "longitude" },
-      };
-
-      stompClient.current?.publish({
-        destination: "/pub/hello",
-        body: JSON.stringify(locationData),
-      });
+      console.log("Stomp Connected:", frame);
 
       const position: RealTimePosition[] = [];
 
       // Stomp 서버에서 메시지를 받는 로직
       stompClient.current?.subscribe(`/sub/channel/${channelId}`, (message) => {
+        console.log(JSON.parse(message.body));
         position.push(JSON.parse(message.body));
-        // setStartStation 초기화시키고
-        // 여기서 받는 바디들을
-        // 배열로 만들어서
-        // 넣어야함
         setStartStation(JSON.parse(message.body));
-        setPositions(position);
+        setPositions([...position]);
       });
+      console.log([...position]);
+      console.log(positions);
     };
   };
 
@@ -79,33 +119,36 @@ const WebSocketPage = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-
         const locationData = {
           type: "message",
           sender: userName,
           channelId: channelId,
           data: { latitude, longitude },
         };
+        console.log('서버 보내기 전 체크'+userName)
+
+        console.log(latitude, longitude);
 
         // Stomp 서버로 메시지 보내기
         stompClient.current?.publish({
-          destination: "/pub/hello",
+          destination: "/pub/connect",
           body: JSON.stringify(locationData),
         });
+        setIsSharingLocation(true);
       },
       (error) => {
         console.error("Error getting location:", error);
       },
     );
   };
+ 
 
   useEffect(() => {
     connectAndSubscribe();
-
     return () => {
       stompClient.current?.deactivate();
     };
-  }, [channelId, userName]);
+  }, [channelId]);
 
   const [station, setStation] = useState<Station | null>(null);
   const [mapBound, setMapBound] = useState<any>([]);
@@ -113,153 +156,151 @@ const WebSocketPage = () => {
   const mapRef = useRef<any>(null);
   let map: undefined;
 
-  useEffect(() => {
-    const kakaoMapScript = document.createElement("script");
-    kakaoMapScript.async = false;
-    kakaoMapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_kakaoMapKey}&libraries=services,clusterer&autoload=false`;
+ 
+  const [points, setPoints] = useState<{ title: string; latlng: any; }[]>([]); 
+  
+  useEffect( () => {  
+    const fetchData = async () => {
+ 
+
+    const kakaoMapScript = document.createElement('script');
+    kakaoMapScript.async = true;
+    kakaoMapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_kakaoMapKey}&autoload=false`;
     document.head.appendChild(kakaoMapScript);
+    /////////////////////////////////////////// 
 
     const onLoadKakaoAPI = () => {
       window.kakao.maps.load(() => {
-        const bounds = new window.kakao.maps.LatLngBounds();
+        var container = document.getElementById('map');
+        console.log(coodRef);
+        if (container) {
+          navigator.geolocation.getCurrentPosition((point) => {
+            var options = {
+              
+              center: new window.kakao.maps.LatLng(point.coords.latitude, point.coords.longitude),
+              
+              level: 3,
+            };
 
-        const fetchData = async () => {
-          return await new Promise<Station[]>((resolve, reject) => {
-            const myValue = localStorage.getItem("station");
-            if (myValue != null) {
-              const jsonValue = JSON.parse(myValue);
-              setStation(jsonValue.station);
-              setStartStation(jsonValue.list as Station[]);
+            const map = new window.kakao.maps.Map(container, options);
 
-              // setCardInfo(jsonValue.list);
-              resolve(jsonValue.list); // jsonValue를 반환합니다.
-            } else {
-              reject(new Error("Unable to get station data")); // 에러 처리
+            // 맵을 위로 80px 올립니다.
+            if (container) {
+              container.style.marginTop = "-80px";
             }
-          });
-        };
+            var centerMarkerPosition = new window.kakao.maps.LatLng(  targetStationLat, targetStationLong);
 
-        var polyline: any[] = [];
-
-        fetchData()
-          .then((list: Station[]) => {
-            list.forEach((Station: Station) => {
-              bounds.extend(
-                new kakao.maps.LatLng(Station.latitude, Station.longitude),
-              );
+            var centermarker = new window.kakao.maps.Marker({
+              position: centerMarkerPosition,
+              title: '도착지'
             });
-            setMapBound(bounds);
 
-            setTimeout(() => {
-              map = mapRef.current;
+            // 마커가 지도 위에 표시되도록 설정합니다
+            centermarker.setMap(map);
 
-              if (map) {
-                mapRef.current?.setBounds(bounds);
-              }
-              polyline.forEach((poly: any) => {
-                poly.setMap(map);
+            var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+
+            var bounds = new kakao.maps.LatLngBounds();
+
+            // centermarker의 위치를 bounds에 추가
+            bounds.extend(centerMarkerPosition);
+
+            for (var i = 0; i < points.length; i++) {
+              var imageSize = new kakao.maps.Size(24, 35);
+              var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+              var marker = new kakao.maps.Marker({
+                map: map,
+                position: points[i].latlng,
+                title: points[i].title, 
+                image: markerImage
               });
-            }, 100);
-          })
-          .catch((error) => {
-            console.error(error);
+
+              // 각 마커의 위치를 bounds에 추가
+              bounds.extend(points[i].latlng);
+
+              // 각 마커에 텍스트를 표시하는 CustomOverlay 생성
+              var customOverlay = new window.kakao.maps.CustomOverlay({
+                position: points[i].latlng,
+                content: '<div style="point: absolute; text-align: center; white-space: nowrap; top: 5px;">' +
+                  '<div style="display: inline-block; background-color: white; padding: 5px; border-radius: 5px; box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3); font-size:12px">' +
+                  points[i].title +
+                  '</div>' +
+                  '</div>',
+              });
+
+              // CustomOverlay 지도에 표시
+              customOverlay.setMap(map);
+            }
+
+            // 현재 좌표와 일정 범위를 고려하여 bounds를 조절
+            var extraPadding = 0.5; // 상하좌우 여백 비율 조절 가능
+            map.setBounds(bounds, extraPadding);
+
           });
+        } else {
+          console.error("Container element not found");
+        }
       });
     };
+ 
+    kakaoMapScript.addEventListener('load', onLoadKakaoAPI);
+  }
+  fetchData();
+    return () => {
+    }; 
+    
+  }, [points, targetStationLong, targetStationLat]); // points 의존성으로 추가
 
-    kakaoMapScript.addEventListener("load", onLoadKakaoAPI);
-  }, [map]);
+  const handleClick = () => {
 
-  const myStation: Station = {
-    stationId: station?.stationId || 0,
-    stationName: station?.stationName || "",
-    longitude: station?.longitude || 0,
-    latitude: station?.latitude || 0,
-    transPath: station?.transPath || "",
-    infracount: station?.infracount || "",
-    userId: station?.userId || "",
+    navigator.geolocation.getCurrentPosition((point) => {
+      const newLocation = {
+        // title: '내 위치',
+        title:  userName,
+        latlng: new window.kakao.maps.LatLng(point.coords.latitude, point.coords.longitude),
+      };
+
+      setPoints((prevPoints) => [
+        ...prevPoints,
+        newLocation,
+      ]);
+
+
+    }, (error) => {
+      console.error("Error getting current point:", error);
+    });
+
+    console.log('New userName:', userName);
   };
 
+  const testFunction = () => {
+    shareLocation();
+    handleClick();
+  }
+
+  //5초에 한번씩 
+  useEffect(() => {  
+    let timer = setInterval(() => { 
+      shareLocation();
+      console.log(positions);
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+
   return (
-    <>
-      <div className="z-10 w-full max-w-xl px-5 xl:px-0">
-        {station && (
-          <Map
-            center={{ lat: myStation.latitude, lng: myStation.longitude }}
-            style={{ width: "90%", height: "360px" }}
-            level={6}
-            id="PlaceMap"
-            ref={mapRef}
-            className=" outline outline-2 outline-offset-4 outline-purple-300"
-          >
-            <MapMarker
-              position={{
-                lat: myStation.latitude,
-                lng: myStation.longitude,
-              }}
-            >
-              <div
-                style={{ color: "#000", width: "150px" }}
-                className="w-150 z-50 flex items-center justify-center"
-                id="endStation"
-              >
-                <div>{myStation.stationName}</div>
-              </div>
-            </MapMarker>
-            {positions.length > 0 &&
-              positions.map((Station, index) => (
-                <MapMarker
-                  key={`${index}`}
-                  position={{
-                    lat: Station.data.latitude,
-                    lng: Station.data.longitude,
-                  }}
-                  clickable={true}
-                >
-                  <div>{Station.sender}</div>
-                </MapMarker>
-              ))}
-            <MapMarker
-              position={{
-                lat: myStation.latitude,
-                lng: myStation.longitude,
-              }}
-            >
-              <div
-                style={{ color: "#000", width: "150px" }}
-                className="w-150 z-50 flex items-center justify-center"
-                id="endStation"
-              >
-                <div>{myStation.stationName}</div>
-              </div>
-            </MapMarker>
-          </Map>
-        )}
+    <main className="w-full flex flex-col items-center justify-center pt-4">
+      <div className="w-full h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[80vh]" style={{ position: "relative" }}>
+        <div id="map" style={{ width: "100%", height: "100%" }}></div> 
+        <button  className="w-30 mt-4 flex items-center justify-center rounded-md border border-gray-300 px-3 py-2 text-center text-blue-800 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100" onClick={testFunction}  style={{ position: "absolute", bottom: "5px", left: "50%", transform: "translateX(-50%)" }}>내 위치 공유하기</button>
+
+        {/* {isSharingLocation && <p className="items-center text-center"> {userName} 님이 실시간 위치를 공유하고 있어요</p>} */}
+
       </div>
-      <div className="z-10 w-full max-w-xl px-5 xl:px-0">
-        <input
-          className="w-30 mt-4 flex items-center justify-center rounded-md border border-gray-300 px-3 py-2 text-center text-blue-800 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
-          type="text"
-          placeholder="방 이름"
-          value={channelId}
-          onChange={(e) => setChannelId(e.target.value)}
-        />
-        <input
-          className="w-30 mt-4 flex items-center justify-center rounded-md border border-gray-300 px-3 py-2 text-center text-blue-800 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
-          type="text"
-          placeholder="유저이름"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-        />
-        <button
-          onClick={shareLocation}
-          className="w-50 mt-4 flex items-center justify-center rounded-md border border-gray-300 px-3 py-2 text-center text-blue-800 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
-        >
-          내 위치 공유하기
-        </button>
-      </div>
-    </>
+    </main>
   );
 };
-
 export default WebSocketPage;
+

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, ReactNode } from "react";
 import Cookies from "js-cookie";
-import RoomFrame from "./component/roomFrame";
+import RoomFrame from "./pagescomponent/roomFrame";
 import { useRouter, usePathname } from "next/navigation";
 import useRoomInfoStore from "../../../store/store";
 

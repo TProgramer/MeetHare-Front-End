@@ -1,10 +1,11 @@
 "use client";
 import React from "react";
-import Calendar from "./CalendarComponent";
+import Calendar from "./Calendar";
 import StartPoint from "./startPoint";
 import DayList from "./DayList";
 import Members from "./MembersModal";
 import NotSubmitMembers from "./NotSubmitMembersModal";
+import Final from "./Final";
 
 type user = {
   id: number;
@@ -100,6 +101,13 @@ export default function RoomFrame({
             token={token}
             totalNumber={roomdata.roominfo.number}
             submitNumber={roomdata.roominfo.submitNumber}
+          />
+        ) : roomdata.roominfo.processivity === "Fix" ? (
+          <Final
+            roomId={roomId}
+            token={token}
+            memberList={roomdata.memberList}
+            stationId={roomdata.roominfo.fixStation}
           />
         ) : null}
       </div>
