@@ -1,9 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
-import useRoomInfoStore from "../../store/store";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 interface PreferenceDTO {
-  user_id: string;
+  user_id: number;
   quite: boolean;
   food: string;
   activity: string;
@@ -65,14 +66,15 @@ const categoriesLan: { [key: string]: string } = {
 export default function Home() {
   const [preference, setPreference] = useState<PreferenceDTO | null>(null);
   const [selectedOptions, setSelectedOptions] = useState<PreferenceDTO>({
-    user_id: "",
+    user_id: 0,
     quite: false,
     food: "",
     activity: "",
     culture: "",
   });
+  const router = useRouter();
 
-  const loadCategories = async (user_id: string) => {
+  const loadCategories = async (user_id: number) => {
     try {
       selectedOptions.user_id = user_id;
       const apiUrl = `${process.env.NEXT_PUBLIC_serverURL}/place/priority/${user_id}`;
@@ -102,13 +104,23 @@ export default function Home() {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
+
+      alert("선호도가 업데이트 되었습니다.");
+      router.push("/");
     } catch (error) {
       console.error("선호도 업데이트 중 에러 발생:", error);
     }
   };
-  const user_id: string = useRoomInfoStore((state: any) => state.userId);
   useEffect(() => {
-    if (user_id !== "") loadCategories(user_id);
+    const token = Cookies.get("Bearer");
+    let user_id = 0;
+    if (token !== undefined) {
+      const base64Payload = token.substring(7).split(".")[1]; // value 0 -> header, 1 -> payload, 2 -> VERIFY SIGNATURE
+      const payload = Buffer.from(base64Payload, "base64");
+      const result = JSON.parse(payload.toString());
+      user_id = result.userId;
+    }
+    if (user_id !== 0) loadCategories(user_id);
   }, []);
 
   const handlequiteClick = (category: string, option: boolean) => {
@@ -141,7 +153,9 @@ export default function Home() {
   return (
     <div className="z-10 w-full max-w-xl overflow-x-auto px-5 xl:px-0">
       <div className="my-5 grid w-full max-w-screen-xl animate-fade-up grid-cols-1 gap-5 px-5 md:grid-cols-3 xl:px-0">
-        <h1 className="mb-4 text-2xl font-bold">🤔당신의 취향은?</h1>
+        <h1 className="mb-4 text-2xl font-bold">
+          🤔제일 좋아하는 걸 하나만 골라주세요!
+        </h1>
         <div className="-mx-2 flex flex-wrap">
           {categoriesData.map((categoryData, index) => (
             <div

@@ -46,7 +46,7 @@ export default function UserDropdown({ token }: { token: String }) {
                 className="w-3/5 rounded bg-blue-300 px-6 py-2 font-bold text-white hover:bg-blue-400"
                 onClick={preference}
               >
-                선호장소
+                좋아하는 것
               </button>
             </div>
           </>
