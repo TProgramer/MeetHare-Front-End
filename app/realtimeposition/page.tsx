@@ -44,7 +44,7 @@ const WebSocketPage = () => {
     const fetchStationInfo = async () => {
       try {
         const encodedFixStation = encodeURIComponent(fixStation);
-        const response = await fetch(`http://localhost:8080/map/getStationInfo?fixStation=${encodedFixStation}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_serverURL}/map/getStationInfo?fixStation=${encodedFixStation}`);
         const data = await response.json(); 
         // 가져온 데이터를 사용할 수 있습니다.
         console.log('여기여기여기여기:', data);
@@ -86,7 +86,8 @@ const WebSocketPage = () => {
 
   const connectAndSubscribe = () => {
     stompClient.current = new Client({
-      brokerURL: "ws://localhost:8080/ws",
+      // brokerURL: "ws://localhost:8080/ws",
+      brokerURL: `${process.env.NEXT_PUBLIC_STOMP_serverURL}/ws`,
       connectHeaders: {
         login: "guest",
         passcode: "guest",
