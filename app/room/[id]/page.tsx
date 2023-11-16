@@ -106,14 +106,20 @@ export default function Room(props: any) {
 
           router.push(`/middlespot/${props.params.id}`);
         } else if (
-          res.roominfo.processivity === "RecommendPlace" ||
-          res.roominfo.processivity === "Fix"
-        ) {
+          res.roominfo.processivity === "RecommendPlace" ) {
           setMyRoomName(res?.myRoomName);
           setMemberList(res?.memberList);
           setRoomInfo(res?.roominfo);
           setUserId(res?.userId);
           router.push(`/place/${res.fixStation}`);
+        }
+        else if (
+          res.roominfo.processivity === "LiveMap" ) {
+          setMyRoomName(res?.myRoomName);
+          setMemberList(res?.memberList);
+          setRoomInfo(res?.roominfo);
+          setUserId(res?.userId);
+          router.push(`/realtimeposition`);
         }
       } else if (resp.status === 204) {
         alert("잘못된 접근입니다.");

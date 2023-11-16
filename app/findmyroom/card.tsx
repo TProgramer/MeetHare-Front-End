@@ -32,7 +32,7 @@ export default function Card({ title, roomId, token }: Props) {
   };
 
   const onTitleChange = async () => {
-    if (editedTitle.length < 3) {
+    if (editedTitle.replace(/\s/g, '').length < 3) {
       alert("최소 3글자 입력");
       return;
     }

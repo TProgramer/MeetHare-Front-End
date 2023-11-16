@@ -57,6 +57,11 @@ export default function CreateRoom() {
       return;
     }
 
+    if (roomName.replace(/\s/g, '').length < 3) {
+      alert("최소 3글자 입력");
+      return;
+    }
+
     if (endDate <= startDate) {
       alert("기간 종료는 기간 시작 이후여야 합니다.");
       return;

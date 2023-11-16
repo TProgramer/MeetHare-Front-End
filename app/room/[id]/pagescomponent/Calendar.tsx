@@ -22,6 +22,7 @@ type Props = {
   totalNumber: number;
   submitNumber: number;
   memberList: user[];
+  master : string;
 };
 
 export default function CalendarComponent({
@@ -33,6 +34,7 @@ export default function CalendarComponent({
   totalNumber,
   submitNumber,
   memberList,
+  master
 }: Props) {
   const [startDate, setStartDate] = useState<Date>(new Date());
   useEffect(() => {
@@ -46,6 +48,18 @@ export default function CalendarComponent({
   const formattedString = nickNameList.join(" , ");
 
   const [selectedDates, setSelectedDates] = useState<Date[]>(fixCalendarDates); // 초기 선택 날짜를 사용자가 제공한 날짜로 설정
+
+  const isMaster = () => {
+    const base64Payload = token.substring(7).split(".")[1]; // value 0 -> header, 1 -> payload, 2 -> VERIFY SIGNATURE
+    const payload = Buffer.from(base64Payload, "base64");
+    const result = JSON.parse(payload.toString());
+    if (result.email === master) {
+      return true;
+    }
+
+    return false;
+  };
+
   useEffect(() => {
     // 클라이언트 측에서 "jwtToken" 키의 쿠키를 가져오기
     if (true) {
@@ -151,13 +165,16 @@ export default function CalendarComponent({
 
   return (
     <div className="flex-column w-full items-center justify-center">
-      <NextForce
-        token={token}
-        roomId={roomId}
-        totalNumber={totalNumber}
-        submitNumber={submitNumber}
-      />
-      <div className="mt-1 h-8 text-center">불가능한 날짜를 제출해주세요</div>
+      {!isMaster() && <div className="mt-1 h-8 text-center font-bold text-lg">방장만이 강제 진행할 수 있습니다</div>}
+      {isMaster() && (
+        <NextForce
+          token={token}
+          roomId={roomId}
+          totalNumber={totalNumber}
+          submitNumber={submitNumber}
+        />
+      )}
+      <div className="mt-1 h-8 text-center"><span className="text-red-500">불가능</span>한 날짜를 제출해주세요</div>
       <div className=" flex  w-full justify-center">
         <Calendar
           formatDay={(locale, date) =>

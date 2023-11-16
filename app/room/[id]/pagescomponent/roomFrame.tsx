@@ -84,6 +84,7 @@ export default function RoomFrame({
             totalNumber={roomdata.roominfo.number}
             submitNumber={roomdata.roominfo.submitNumber}
             memberList={roomdata.memberList}
+            master={roomdata.roominfo.master}
           />
         ) : roomdata.roominfo.processivity === "RecommendDay" ? (
           <DayList
