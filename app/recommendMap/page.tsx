@@ -141,7 +141,7 @@ export default function RecommendMap() {
                     ))}
                   {stationNameList?.length > 0 &&
                     jwtToken != undefined &&
-                    roominfo.roomId != 0 &&
+                    roominfo.roomId == 0 &&
                     stationNameList.map((data, index) => (
                       <tr
                         key={index}
