@@ -65,8 +65,7 @@ const PlaceModal = ({
   const confirmPlace = async () => {
     try {
       await sendConfirmPlace();
-
-      // 페이지 변경 내용 추가
+      router.push("/final");
     } catch (error) {
       console.error("장소 확정 중 에러 발생:", error);
     }
@@ -96,7 +95,6 @@ const PlaceModal = ({
         throw new Error(`HTTP error! Status: ${response.status}`);
       else if (fixAddress) {
         setFixPlace(fixAddress);
-        router.push("/final");
       }
     } catch (error) {
       console.error("진행정보 업데이트 중 에러 발생:", error);
