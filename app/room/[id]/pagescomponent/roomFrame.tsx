@@ -105,8 +105,8 @@ export default function RoomFrame({
           />
         ) : roomdata.roominfo.processivity === "Fix" ? (
           <Final
-            roomId={roomId}
-            token={token}
+            // roomId={roomId}
+            // token={token}
             memberList={roomdata.memberList}
             stationId={roomdata.roominfo.fixStation}
           />

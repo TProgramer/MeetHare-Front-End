@@ -98,35 +98,18 @@ export default function Room(props: any) {
         const res = await resp.json();
         setDataList(res); // API에서 받은 데이터를 리스트로 저장
 
-        if (res.roominfo.processivity === "RecommendStation") {
-          setMyRoomName(res?.myRoomName);
-          setMemberList(res?.memberList);
-          setRoomInfo(res?.roominfo);
-          setUserId(res?.userId);
-
+        setMyRoomName(res?.myRoomName);
+        setMemberList(res?.memberList);
+        setRoomInfo(res?.roominfo);
+        setUserId(res?.userId);
+        if (res.roominfo.processivity === "RecommendStation")
           router.push(`/middlespot/${props.params.id}`);
-        } else if (
-          res.roominfo.processivity === "RecommendPlace" ) {
-          setMyRoomName(res?.myRoomName);
-          setMemberList(res?.memberList);
-          setRoomInfo(res?.roominfo);
-          setUserId(res?.userId);
+        else if (res.roominfo.processivity === "RecommendPlace")
           router.push(`/place/${res.fixStation}`);
-        }else if (
-          res.roominfo.processivity === "Fix" ) {
-          setMyRoomName(res?.myRoomName);
-          setMemberList(res?.memberList);
-          setRoomInfo(res?.roominfo);
-          setUserId(res?.userId);
-        }
-        else if (
-          res.roominfo.processivity === "LiveMap" ) {
-          setMyRoomName(res?.myRoomName);
-          setMemberList(res?.memberList);
-          setRoomInfo(res?.roominfo);
-          setUserId(res?.userId);
+        else if (res.roominfo.processivity === "Fix")
+          router.push(`/fixedreserve`);
+        else if (res.roominfo.processivity === "LiveMap")
           router.push(`/realtimeposition`);
-        }
       } else if (resp.status === 204) {
         alert("잘못된 접근입니다.");
         router.push(`/`);

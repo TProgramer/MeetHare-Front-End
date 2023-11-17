@@ -7,8 +7,8 @@ import "./embla.css";
 import { useRouter } from "next/navigation";
 
 type Props = {
-  roomId: string;
-  token: string;
+  // roomId: string;
+  // token: string;
   memberList: user[];
   stationId: number;
 };
@@ -21,7 +21,7 @@ type user = {
   longitude: number;
 };
 
-export default function Final({ roomId, memberList, stationId }: Props) {
+export default function Final({ memberList, stationId }: Props) {
   interface Station {
     stationId: number;
     stationName: string;
@@ -180,7 +180,7 @@ export default function Final({ roomId, memberList, stationId }: Props) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ locations: newArray, ...stationNumber }),
+      body: JSON.stringify({ locations: newArray, stationNumber: stationId }),
     })
       .then((response) => {
         if (!response.ok) {
@@ -219,121 +219,104 @@ export default function Final({ roomId, memberList, stationId }: Props) {
 
   return (
     <>
-      <div className="z-10 flex w-full max-w-xl flex-col rounded-md px-5 xl:px-0">
-        <div className="h-120 relative col-span-1 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md ">
-          <br />
-          <div className="flex flex-row items-center justify-center">
-            추천 장소는 &nbsp;
-            <p className={` text-2xl`}>{myStation.stationName}</p>&nbsp; 입니다
-          </div>
-          <br />
-          <div className="grid place-items-center">
-            {station && (
-              <Map
-                center={{ lat: myStation.latitude, lng: myStation.longitude }}
-                style={{ width: "90%", height: "360px" }}
-                level={6}
-                id="PlaceMap"
-                ref={mapRef}
-                className=" outline outline-2 outline-offset-4 outline-purple-300"
+      <div className="flex flex-row items-center justify-center">
+        약속장소가 &nbsp;
+        <p className={` text-2xl`}>{myStation.stationName}</p>&nbsp; 근방입니다
+      </div>
+      <br />
+      <div className="grid place-items-center">
+        {station && (
+          <Map
+            center={{ lat: myStation.latitude, lng: myStation.longitude }}
+            style={{ width: "90%", height: "360px" }}
+            level={6}
+            id="PlaceMap"
+            ref={mapRef}
+            className=" outline outline-2 outline-offset-4 outline-purple-300"
+          >
+            <MapMarker
+              position={{
+                lat: myStation.latitude,
+                lng: myStation.longitude,
+              }}
+            >
+              <div
+                style={{ color: "#000", width: "150px" }}
+                className="w-150 z-50 flex items-center justify-center"
+                id="endStation"
               >
-                <MapMarker
-                  position={{
-                    lat: myStation.latitude,
-                    lng: myStation.longitude,
-                  }}
-                >
-                  <div
-                    style={{ color: "#000", width: "150px" }}
-                    className="w-150 z-50 flex items-center justify-center"
-                    id="endStation"
-                  >
-                    <div>{myStation.stationName}</div>
-                  </div>
-                </MapMarker>
-
-                {startStation.length > 0 &&
-                  startStation.map((Station, index) => (
-                    <MapMarker
-                      key={`${Station.userId}-${Station.longitude}-${Station.latitude}`}
-                      position={{
-                        lat: Station.latitude,
-                        lng: Station.longitude,
-                      }}
-                      clickable={true}
-                    >
-                      {isOpen && (
-                        <div style={{ color: "#000" }}>
-                          {Station.userId}1111
-                        </div>
-                      )}
-                    </MapMarker>
-                  ))}
-              </Map>
-            )}
-          </div>
-          <br />
-          <div>
-            <div className="embla">
-              <div className="embla__viewport" ref={viewportRef}>
-                <div className="embla__container">
-                  {cardInfo.length > 0 &&
-                    cardInfo.map((card, index) => (
-                      <div className="embla__slide flex flex-col" key={index}>
-                        <div className="flex flex-row justify-between">
-                          <div className="text-xl">{card.userId} 님</div>
-                          <div>{card.minTime}분</div>
-                        </div>
-                        <br />
-                        <div className="text-xl">이동 경로</div>
-                        <div className="flex flex-col">
-                          {pathInfo[index] &&
-                            pathInfo[index]
-                              .filter((info) => info.sectionTime != 0)
-                              .map((p: any) => (
-                                <div className="my-3" key={card.userId}>
-                                  <div className="flex flex-row">
-                                    <div>
-                                      {p.trafficType == 1 && <p>지하철</p>}
-                                    </div>
-                                    &nbsp;
-                                    <div>{p.lane && p.lane[0].name}</div>
-                                    <div>
-                                      {p.trafficType == 2 && <p>버스</p>}
-                                    </div>
-                                    <div>
-                                      {p.trafficType == 3 && <p>걷기</p>}
-                                    </div>
-                                    &nbsp;
-                                    <div>
-                                      {p.sectionTime && (
-                                        <p> {p.sectionTime}분</p>
-                                      )}
-                                    </div>
-                                  </div>
-                                  <div className="text-sm">
-                                    {p.startName && (
-                                      <p> {p.startName}역 탑승</p>
-                                    )}
-                                  </div>
-                                  <div className="text-sm">
-                                    {p.endName && <p> {p.endName}역 하차</p>}
-                                  </div>
-                                </div>
-                              ))}
-                        </div>
-                      </div>
-                    ))}
-                </div>
+                <div>{myStation.stationName}</div>
               </div>
-            </div>
-            <div className="flex justify-around">
-              <Button variant="outlined" onClick={() => router.back()}>
-                커스텀해서 쓰세용
-              </Button>
+            </MapMarker>
+
+            {startStation.length > 0 &&
+              startStation.map((Station, index) => (
+                <MapMarker
+                  key={`${Station.userId}-${Station.longitude}-${Station.latitude}`}
+                  position={{
+                    lat: Station.latitude,
+                    lng: Station.longitude,
+                  }}
+                  clickable={true}
+                >
+                  {isOpen && (
+                    <div style={{ color: "#000" }}>{Station.userId}1111</div>
+                  )}
+                </MapMarker>
+              ))}
+          </Map>
+        )}
+      </div>
+      <br />
+      <div>
+        <div className="embla">
+          <div className="embla__viewport" ref={viewportRef}>
+            <div className="embla__container">
+              {cardInfo.length > 0 &&
+                cardInfo.map((card, index) => (
+                  <div className="embla__slide flex flex-col" key={index}>
+                    <div className="flex flex-row justify-between">
+                      <div className="text-xl">{card.userId} 님</div>
+                      <div>{card.minTime}분</div>
+                    </div>
+                    <br />
+                    <div className="text-xl">이동 경로</div>
+                    <div className="flex flex-col">
+                      {pathInfo[index] &&
+                        pathInfo[index]
+                          .filter((info) => info.sectionTime != 0)
+                          .map((p: any) => (
+                            <div className="my-3" key={card.userId}>
+                              <div className="flex flex-row">
+                                <div>{p.trafficType == 1 && <p>지하철</p>}</div>
+                                &nbsp;
+                                <div>{p.lane && p.lane[0].name}</div>
+                                <div>{p.trafficType == 2 && <p>버스</p>}</div>
+                                <div>{p.trafficType == 3 && <p>걷기</p>}</div>
+                                &nbsp;
+                                <div>
+                                  {p.sectionTime && <p> {p.sectionTime}분</p>}
+                                </div>
+                              </div>
+                              <div className="text-sm">
+                                {p.startName && <p> {p.startName}역 탑승</p>}
+                              </div>
+                              <div className="text-sm">
+                                {p.endName && <p> {p.endName}역 하차</p>}
+                              </div>
+                            </div>
+                          ))}
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
         </div>
+        {/* <div className="flex justify-around">
+              <Button variant="outlined" onClick={() => router.back()}>
+                커스텀해서 쓰세용
+              </Button>
+            </div> */}
       </div>
     </>
   );

@@ -65,7 +65,7 @@ const PlaceModal = ({
   const confirmPlace = async () => {
     try {
       await sendConfirmPlace();
-      router.push("/final");
+      router.push("/fixedreserve");
     } catch (error) {
       console.error("장소 확정 중 에러 발생:", error);
     }
