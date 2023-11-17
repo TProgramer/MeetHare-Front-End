@@ -40,7 +40,7 @@ export default function KakaoShareButton({ nickNameList }: Prop) {
           title: "우리 지금 만나🎵",
           description: `${nickNameList}와 함께 만나요`,
           imageUrl:
-            "https://i.namu.wiki/i/6Wltl32pUBAnqaQkg-ow4diVQxSJFVnHZkKOrOjwvIvsghokdVbdphQD5obKTAiSJOPkToy2TKCB19rWjDGMPa73OVLTB3-vKwPZjJgc_5btjiZ-4WJvgvDlr6ZjqBxPSdw-RmVHdv9XzhUhvPJvIQ.webp",
+            "https://lab.ssafy.com/s09-final/S09P31A702/uploads/295f07578cbf37acafbda8ac39db7c9b/image.png",
           link: {
             mobileWebUrl: `https://meethare.site${pathname}`,
             webUrl: `https://meethare.site${pathname}`,

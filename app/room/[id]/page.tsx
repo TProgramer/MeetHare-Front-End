@@ -112,6 +112,12 @@ export default function Room(props: any) {
           setRoomInfo(res?.roominfo);
           setUserId(res?.userId);
           router.push(`/place/${res.fixStation}`);
+        }else if (
+          res.roominfo.processivity === "Fix" ) {
+          setMyRoomName(res?.myRoomName);
+          setMemberList(res?.memberList);
+          setRoomInfo(res?.roominfo);
+          setUserId(res?.userId);
         }
         else if (
           res.roominfo.processivity === "LiveMap" ) {
