@@ -33,9 +33,8 @@ const PlaceModal = ({
 }) => {
   const [toastMessage, setToastMessage] = useState("");
   const router = useRouter();
-  let roomName = useRoomInfoStore((state: any) => state.roominfo.roomId);
   let roomId = useRoomInfoStore((state: any) => state.roominfo.roomId);
-  let room = useRoomInfoStore((state: any) => state.roominfo);
+  let master = useRoomInfoStore((state: any) => state.roominfo.master);
   let { setFixPlace } = useRoomInfoStore();
 
   let removeToast: NodeJS.Timeout;
@@ -72,6 +71,15 @@ const PlaceModal = ({
   };
   const sendConfirmPlace = async () => {
     try {
+      const token = Cookies.get("Bearer");
+      if (token !== undefined) {
+        const base64Payload = token.substring(7).split(".")[1];
+        const payload = Buffer.from(base64Payload, "base64");
+        const result = JSON.parse(payload.toString());
+        const ownerEmail = result.email;
+        if (ownerEmail !== master) return alert("방장만 가능합니다.");
+      }
+
       const apiUrl = `${process.env.NEXT_PUBLIC_serverURL}/user-manage/room/setplace`;
       let requestData;
       let fixAddress;
@@ -81,7 +89,7 @@ const PlaceModal = ({
         roomId: roomId,
         place: fixAddress,
       };
-      const token = Cookies.get("Bearer");
+
       const JwtToken = `Bearer ${token}`;
       const response = await fetch(apiUrl, {
         method: "POST",
@@ -204,7 +212,7 @@ const PlaceModal = ({
           )}
         </div>
       </div>
-      {roomName != "" && (
+      {roomId != "" && (
         <>
           <div className="sticky bottom-0 z-20 flex w-full items-center justify-center rounded-t-[10px] bg-inherit pb-1">
             <button

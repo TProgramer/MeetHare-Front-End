@@ -151,8 +151,8 @@ export default function Home() {
   }, [preference]);
 
   return (
-    <div className="z-10 w-full max-w-xl overflow-x-auto px-5 xl:px-0">
-      <div className="my-5 grid w-full max-w-screen-xl animate-fade-up grid-cols-1 gap-5 px-5 md:grid-cols-3 xl:px-0">
+    <div className="z-10 w-full max-w-4xl overflow-x-auto px-5 xl:px-0">
+      <div className="my-5 grid w-full max-w-full animate-fade-up grid-cols-1 gap-5 px-5 xl:px-0">
         <h1 className="mb-4 text-2xl font-bold">
           🤔제일 좋아하는 걸 하나만 골라주세요!
         </h1>
@@ -160,7 +160,7 @@ export default function Home() {
           {categoriesData.map((categoryData, index) => (
             <div
               key={index}
-              className="mb-4 w-full px-2 sm:w-1/2 md:w-1/3 lg:w-1/4"
+              className="mb-4 w-full px-2 sm:w-1/4 md:w-1/4 lg:w-1/4"
             >
               <div className="w-full rounded-lg bg-white p-4 shadow">
                 <h2 className="mb-2 text-xl font-semibold">
