@@ -10,7 +10,7 @@ type Props = {
   // roomId: string;
   // token: string;
   memberList: user[];
-  stationId: number;
+  roomInfo: room;
 };
 
 type user = {
@@ -21,7 +21,21 @@ type user = {
   longitude: number;
 };
 
-export default function Final({ memberList, stationId }: Props) {
+type room = {
+  category: string;
+  processivity: string;
+  fixDay: any[];
+  fixPlace: string;
+  fixStation: number;
+  submitNumber: number;
+  number: number;
+  periodStart: string;
+  periodEnd: string;
+  master: string;
+  roomId: number;
+};
+
+export default function Final({ memberList, roomInfo }: Props) {
   interface Station {
     stationId: number;
     stationName: string;
@@ -69,7 +83,7 @@ export default function Final({ memberList, stationId }: Props) {
   let map: undefined;
 
   useEffect(() => {
-    handleFindLocationClick();
+    handleFindLocationClick(roomInfo);
     const kakaoMapScript = document.createElement("script");
     kakaoMapScript.async = false;
     kakaoMapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_kakaoMapKey}&libraries=services,clusterer&autoload=false`;
@@ -163,24 +177,22 @@ export default function Final({ memberList, stationId }: Props) {
     };
 
     kakaoMapScript.addEventListener("load", onLoadKakaoAPI);
-  }, [map]);
+  }, [map, roomInfo]);
 
-  useEffect(() => {}, []);
-
-  const handleFindLocationClick = () => {
+  const handleFindLocationClick = (roomInfo: room) => {
     const newArray = memberList.map((item) => ({
       userId: item.nickName,
       stationName: item.stationName,
       latitude: item.latitude,
       longitude: item.longitude,
     }));
-    const stationNumber = { stationId };
+    const stationNumber = roomInfo?.fixStation;
     fetch(`${process.env.NEXT_PUBLIC_serverURL}/map/meetingPlace`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ locations: newArray, stationNumber: stationId }),
+      body: JSON.stringify({ locations: newArray, stationNumber }),
     })
       .then((response) => {
         if (!response.ok) {
@@ -275,37 +287,67 @@ export default function Final({ memberList, stationId }: Props) {
               {cardInfo.length > 0 &&
                 cardInfo.map((card, index) => (
                   <div className="embla__slide flex flex-col" key={index}>
+                    <div className="flex justify-between"></div>
                     <div className="flex flex-row justify-between">
-                      <div className="text-xl">{card.userId} 님</div>
+                      {roomInfo.roomId != 0 && (
+                        <div className="text-xl">{card.userId} 님</div>
+                      )}
+                      {roomInfo.roomId == 0 && (
+                        <div className="text-xl">
+                          {startStation[index].stationName} 출발
+                        </div>
+                      )}
                       <div>{card.minTime}분</div>
                     </div>
                     <br />
-                    <div className="text-xl">이동 경로</div>
-                    <div className="flex flex-col">
-                      {pathInfo[index] &&
-                        pathInfo[index]
-                          .filter((info) => info.sectionTime != 0)
-                          .map((p: any) => (
-                            <div className="my-3" key={card.userId}>
-                              <div className="flex flex-row">
-                                <div>{p.trafficType == 1 && <p>지하철</p>}</div>
-                                &nbsp;
-                                <div>{p.lane && p.lane[0].name}</div>
-                                <div>{p.trafficType == 2 && <p>버스</p>}</div>
-                                <div>{p.trafficType == 3 && <p>걷기</p>}</div>
-                                &nbsp;
-                                <div>
-                                  {p.sectionTime && <p> {p.sectionTime}분</p>}
+                    <div className="text-center text-xl">이동 경로</div>
+                    <div className="flex flex-row justify-between">
+                      <div className="flex flex-col justify-center text-2xl">
+                        &lt;
+                      </div>
+                      <div>
+                        {pathInfo[index] &&
+                          pathInfo[index]
+                            .filter((info) => info.sectionTime != 0)
+                            .map((p: any, index) => (
+                              <div
+                                className="my-3"
+                                key={`${card.userId}-${index}`}
+                              >
+                                <div className="flex flex-row items-center justify-center">
+                                  <div>
+                                    {p.trafficType == 1 && <p>지하철 🚉</p>}
+                                  </div>
+                                  &nbsp;
+                                  <div>{p.lane && p.lane[0].name}</div>
+                                  <div>
+                                    {p.trafficType == 2 && <p>버스 🚌</p>}
+                                  </div>
+                                  <div>
+                                    {p.trafficType == 3 && <p>걷기 🚶</p>}
+                                  </div>
+                                  &nbsp;
+                                  <div>
+                                    {p.sectionTime && <p> {p.sectionTime}분</p>}
+                                  </div>
                                 </div>
+                                <div className="text-center text-sm">
+                                  {p.startName && <p> {p.startName}역 탑승</p>}
+                                </div>
+                                <div className="text-center text-sm">
+                                  {p.endName && <p> {p.endName}역 하차</p>}
+                                </div>
+                                <hr />
                               </div>
-                              <div className="text-sm">
-                                {p.startName && <p> {p.startName}역 탑승</p>}
-                              </div>
-                              <div className="text-sm">
-                                {p.endName && <p> {p.endName}역 하차</p>}
-                              </div>
-                            </div>
-                          ))}
+                            ))}
+                      </div>
+                      <div className="flex flex-col justify-center text-2xl">
+                        &gt;
+                      </div>
+                    </div>
+                    <br />
+                    <div className="items-align flex justify-center">
+                      {index + 1} / {cardInfo.length}
                     </div>
                   </div>
                 ))}

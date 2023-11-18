@@ -22,7 +22,7 @@ export default async function Home() {
           style={{ animationDelay: "0.3s", animationFillMode: "forwards" }}
         ></div>
       </div>
-      <div className="my-10 grid w-full max-w-screen-xl animate-fade-up grid-cols-1 gap-5 break-keep px-5 md:grid-cols-3 xl:px-0">
+      <div className="my-10 grid w-80% max-w-screen-xl animate-fade-up grid-cols-1 gap-5 break-keep px-5 xl:px-0">
         {features.map(({ title, description, demo, link }) => (
           <Card
             key={title}

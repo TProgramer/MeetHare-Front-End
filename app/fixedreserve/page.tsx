@@ -86,10 +86,7 @@ export default function FiexedReserve() {
               🚉 가는길
             </h2>
             <br />
-            <Final
-              memberList={members}
-              stationId={roominfos.fixStation}
-            ></Final>
+            <Final memberList={members} roomInfo={roominfos}></Final>
             <br />
             <br />
           </div>

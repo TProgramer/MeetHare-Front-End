@@ -20,7 +20,7 @@ const WebSocketPage = () => {
   const [targetStationLong, setTargetStationLong] = useState(0);
   const [targetStationLat, setTargetStationLat] = useState(0);
   const [isSharingLocation, setIsSharingLocation] = useState(false);
-
+  const [markerArray, setMarkerArray] = useState<any[]>([]);
   const { myRoomName, roominfo } = useRoomInfoStore();
   const { fixStation } = roominfo;
   const coodRef = useRef({ lat: null, lng: null });
@@ -220,6 +220,15 @@ const WebSocketPage = () => {
               // centermarker의 위치를 bounds에 추가
               bounds.extend(centerMarkerPosition);
 
+              // useState markerArray가 있으면 기존 마커 제거하기
+              if(markerArray.length != 0){
+                for(var i = 0; i < markerArray.length; i++){
+                  markerArray[i].setMap(null);
+                }
+              }
+
+              const tempArr : any[] = [];
+
               for (var i = 0; i < points.length; i++) {
                 var imageSize = new kakao.maps.Size(24, 35);
                 var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
@@ -246,7 +255,12 @@ const WebSocketPage = () => {
 
                 // CustomOverlay 지도에 표시
                 customOverlay.setMap(map);
+                // customOverlay 배열에 더하기
+                tempArr.push(customOverlay);
               }
+
+              // 마커 배열을 useState에 넣기
+              setMarkerArray(tempArr);
 
               // 현재 좌표와 일정 범위를 고려하여 bounds를 조절
               var extraPadding = 0.5; // 상하좌우 여백 비율 조절 가능

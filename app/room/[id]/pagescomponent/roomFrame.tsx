@@ -22,14 +22,15 @@ type SpecificRoomDTO = {
   roominfo: {
     category: string;
     processivity: string;
-    fixDay: [];
-    fixPlace: number;
+    fixDay: any[];
+    fixPlace: string;
     fixStation: number;
     submitNumber: number;
     number: number;
     periodStart: string;
     periodEnd: string;
     master: string;
+    roomId: number;
   };
 };
 type Props = {
@@ -108,7 +109,7 @@ export default function RoomFrame({
             // roomId={roomId}
             // token={token}
             memberList={roomdata.memberList}
-            stationId={roomdata.roominfo.fixStation}
+            roomInfo={roomdata.roominfo}
           />
         ) : null}
       </div>
