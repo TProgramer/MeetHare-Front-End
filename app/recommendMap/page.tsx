@@ -45,9 +45,6 @@ export default function RecommendMap() {
       setJwtToken(`Bearer ${token}`);
     }
 
-    console.log(1);
-    console.log(roominfo);
-
     const testFunction = () => {
       const stationList = localStorage.getItem("stationList");
       if (stationList != null) {

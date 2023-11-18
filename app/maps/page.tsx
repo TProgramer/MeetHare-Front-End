@@ -75,10 +75,8 @@ export default function Maps() {
             const myValue = localStorage.getItem("station");
             if (myValue != null) {
               const jsonValue = JSON.parse(myValue);
-              console.log(jsonValue);
               setStation(jsonValue.station);
               setStartStation(jsonValue.list as Station[]);
-              console.log(jsonValue.list);
               setCardInfo(jsonValue.list as userInfo[]);
               const pathArr: path[][] = [];
               jsonValue.list.forEach((user: any) => {

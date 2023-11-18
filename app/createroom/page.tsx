@@ -57,7 +57,7 @@ export default function CreateRoom() {
       return;
     }
 
-    if (roomName.replace(/\s/g, '').length < 3) {
+    if (roomName.replace(/\s/g, "").length < 3) {
       alert("최소 3글자 입력");
       return;
     }

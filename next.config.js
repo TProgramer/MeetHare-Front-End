@@ -19,18 +19,6 @@ const withPWA = require("@ducanh2912/next-pwa").default({
 const nextConfig = {
   reactStrictMode: false,
   swcMinify: true,
-  images: {
-    domains: ["lh3.googleusercontent.com", "vercel.com"],
-  },
-  async redirects() {
-    return [
-      {
-        source: "/github",
-        destination: "https://github.com/steven-tey/precedent",
-        permanent: false,
-      },
-    ];
-  },
 };
 
 module.exports = withPWA(nextConfig);

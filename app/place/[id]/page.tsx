@@ -109,7 +109,7 @@ export default function Place(props: any) {
   }, [props]);
   return (
     <>
-      <div className="flex-direction-column justify-center z-10 flex w-full px-5 xl:px-0">
+      <div className="flex-direction-column z-10 flex w-full justify-center px-5 xl:px-0">
         <div className="my-5 grid w-full max-w-md animate-fade-up grid-cols-1 gap-5 px-5 xl:px-0">
           <div className="sticky grid grid-cols-1 gap-5">
             <div className="flex-direction-row flex justify-between ">

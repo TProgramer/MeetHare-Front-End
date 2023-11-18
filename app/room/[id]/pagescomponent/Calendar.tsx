@@ -22,7 +22,7 @@ type Props = {
   totalNumber: number;
   submitNumber: number;
   memberList: user[];
-  master : string;
+  master: string;
 };
 
 export default function CalendarComponent({
@@ -34,7 +34,7 @@ export default function CalendarComponent({
   totalNumber,
   submitNumber,
   memberList,
-  master
+  master,
 }: Props) {
   const [startDate, setStartDate] = useState<Date>(new Date());
   useEffect(() => {
@@ -165,7 +165,11 @@ export default function CalendarComponent({
 
   return (
     <div className="flex-column w-full items-center justify-center">
-      {!isMaster() && <div className="mt-1 h-8 text-center font-bold text-lg">방장만이 강제 진행할 수 있습니다</div>}
+      {!isMaster() && (
+        <div className="mt-1 h-8 text-center text-lg font-bold">
+          방장만이 강제 진행할 수 있습니다
+        </div>
+      )}
       {isMaster() && (
         <NextForce
           token={token}
@@ -174,7 +178,9 @@ export default function CalendarComponent({
           submitNumber={submitNumber}
         />
       )}
-      <div className="mt-1 h-8 text-center"><span className="text-red-500">불가능</span>한 날짜를 제출해주세요</div>
+      <div className="mt-1 h-8 text-center">
+        <span className="text-red-500">불가능</span>한 날짜를 제출해주세요
+      </div>
       <div className=" flex  w-full justify-center">
         <Calendar
           formatDay={(locale, date) =>

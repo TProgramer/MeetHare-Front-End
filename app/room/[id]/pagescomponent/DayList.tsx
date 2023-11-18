@@ -63,7 +63,7 @@ export default function Daylist({
   const handleEndDateChange = (date: Date) => {
     setEndDate(date);
   };
-  
+
   const handleRollBackClick = async () => {
     try {
       const resp = await fetch(
@@ -77,8 +77,7 @@ export default function Daylist({
           body: JSON.stringify({
             roomId: parseInt(roomId, 10),
             periodStart: startDate,
-            periodEnd : endDate
-
+            periodEnd: endDate,
           }),
         },
       )
