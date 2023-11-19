@@ -96,6 +96,9 @@ export default function StartPoint({ roomId, token }: Props) {
       </p>
 
       <div className="flex justify-center">
+        <button className="mr-4 mt-3 text-white">
+          찾기
+        </button>
         <input
           className="mt-4 flex w-60 items-center justify-center rounded-md border border-gray-300 px-3 py-2 text-center text-blue-800 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
           type="text"
@@ -113,7 +116,7 @@ export default function StartPoint({ roomId, token }: Props) {
 
       {responseData && responseData.length > 0 && (
         <>
-          <div className="z-10 w-full max-w-xl px-5 xl:px-0">
+          <div className="z-10 w-full max-w-xl px-5 xl:px-0 flex flex-wrap justify-center">
             {responseData.map((data, index) => (
               <input
                 key={index}
@@ -131,7 +134,7 @@ export default function StartPoint({ roomId, token }: Props) {
               />
             ))}
           </div>
-
+          <div className="flex justify-end">
           <button
             type="button"
             className="mt-4 flex w-36 items-center justify-center rounded-md border border-gray-300 px-3 py-2 text-center text-blue-800 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
@@ -150,6 +153,7 @@ export default function StartPoint({ roomId, token }: Props) {
           >
             선택
           </button>
+          </div>
         </>
       )}
     </div>

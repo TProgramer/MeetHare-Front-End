@@ -55,7 +55,7 @@ export default function FiexedReserve() {
 
   return (
     <div className="z-10 w-full max-w-xl break-keep px-5 xl:px-0">
-      <div className="my-10 grid w-full max-w-screen-xl animate-fade-up grid-cols-1 gap-5 break-keep px-5 md:grid-cols-3 xl:px-0">
+      <div className="my-10 grid w-full max-w-screen-xl animate-fade-up grid-cols-1 gap-5 break-keep px-5 xl:px-0">
         <div className="w-full overflow-auto md:max-w-md md:rounded-2xl md:border md:border-gray-100 md:shadow-xl">
           <div className="flex flex-col justify-center space-y-3 bg-white px-4 py-6 pt-8 text-center md:px-16">
             <h1 className="font-display text-2xl font-bold">{roomName}</h1>

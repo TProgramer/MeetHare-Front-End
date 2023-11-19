@@ -167,7 +167,7 @@ export default function CalendarComponent({
     <div className="flex-column w-full items-center justify-center">
       {!isMaster() && (
         <div className="mt-1 h-8 text-center text-lg font-bold">
-          방장만이 강제 진행할 수 있습니다
+          방장만이 진행할 수 있습니다
         </div>
       )}
       {isMaster() && (
@@ -181,7 +181,7 @@ export default function CalendarComponent({
       <div className="mt-1 h-8 text-center">
         <span className="text-red-500">불가능</span>한 날짜를 제출해주세요
       </div>
-      <div className=" flex  w-full justify-center">
+      <div className="flex w-full justify-center">
         <Calendar
           formatDay={(locale, date) =>
             date.toLocaleString("en", { day: "numeric" })
@@ -207,7 +207,7 @@ export default function CalendarComponent({
               return isDateSelected ||
                 (isInitialDateSelected && !isdeletedSelected) ? (
                 <div className="redText">❌</div>
-              ) : null;
+              ) : <div className="h-4"></div>;
             }
           }}
           tileDisabled={({ date }) => {
@@ -216,10 +216,8 @@ export default function CalendarComponent({
           }}
         />
       </div>
-      {/* 나머지 부분은 동일하게 유지 */}
-
-      <div className="flex justify-around">
-        <div></div>
+      <div className="flex w-full max-w-l justify-evenly">
+        <div className="w-10"></div>
         <button
           onClick={handleSubmit}
           className="mt-2 rounded bg-blue-500 p-4 px-4 py-2 font-bold text-white "

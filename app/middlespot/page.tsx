@@ -119,6 +119,12 @@ export default function MiddleSpot() {
                   <div key={index} className="flex items-center">
                     <button
                       type="button"
+                      className="mr-3 text-white"
+                    >
+                      <p className="mr-3 text-sm font-bold">X</p>
+                    </button>
+                    <button
+                      type="button"
                       className="my-2 flex w-36 items-center justify-center rounded-md border border-gray-300 px-3 py-2 text-center text-blue-800 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
                       onClick={() =>
                         router.push(
@@ -136,7 +142,7 @@ export default function MiddleSpot() {
                       className="ml-2 text-red-400"
                       onClick={() => handleRemoveLocation(index)}
                     >
-                      <p className="ml-2 text-sm font-bold">X</p>
+                      <p className="m-2 text-sm font-bold">X</p>
                     </button>
                   </div>
                 ))}
@@ -170,7 +176,7 @@ export default function MiddleSpot() {
                 className="prose-sm mt-3 leading-normal text-gray-500 [text-wrap:balance] md:prose"
               >
                 <p>
-                  유저아이디를 눌러 위치를 입력하고 <br />
+                  위치 추가를 눌러 새로운 위치를 입력하고 <br />
                   <a
                     target="_blank"
                     rel="noopener noreferrer"

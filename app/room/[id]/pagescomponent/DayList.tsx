@@ -170,19 +170,21 @@ export default function Daylist({
           </div>
 
           {isMaster() && (
-            <button
-              type="button"
-              className="mt-4 flex w-36 items-center justify-center rounded-md border border-gray-300 px-3 py-2 text-center text-blue-800 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
-              onClick={() => {
-                if (!fixDate) {
-                  alert("날짜를 선택해주세요");
-                  return;
-                }
-                handleSendClick();
-              }}
-            >
-              선택
-            </button>
+            <div className="flex justify-center">
+              <button
+                type="button"
+                className="mt-4 w-36 justify-center rounded-md border border-gray-300 px-3 py-2 text-center text-blue-800 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
+                onClick={() => {
+                  if (!fixDate) {
+                    alert("날짜를 선택해주세요");
+                    return;
+                  }
+                  handleSendClick();
+                }}
+              >
+                선택
+              </button>
+            </div>
           )}
         </>
       ) : (

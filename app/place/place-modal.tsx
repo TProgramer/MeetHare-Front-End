@@ -64,11 +64,14 @@ const PlaceModal = ({
   const confirmPlace = async () => {
     try {
       await sendConfirmPlace();
-      router.push("/fixedreserve");
+      if (modalData !== null)
+        setFixPlace(modalData.place_name + "\n" + modalData.place_address);
+        router.push("/fixedreserve");
     } catch (error) {
       console.error("장소 확정 중 에러 발생:", error);
     }
   };
+
   const sendConfirmPlace = async () => {
     try {
       const token = Cookies.get("Bearer");

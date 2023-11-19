@@ -57,21 +57,23 @@ export default function MiddleSpotRoom() {
                   <button
                     key={index}
                     type="button"
-                    className="mt-4 flex w-36 items-center justify-center rounded-md border border-gray-300 px-3 py-2 text-center text-blue-800 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
+                    className="mt-4 flex w-48 items-center justify-center rounded-md border border-gray-300 px-3 py-2 text-center text-blue-800 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
                   >
                     {location.nickName} - {""}
                     {location.stationName ? location.stationName : "미정"}
                   </button>
                 ))}
-                <button
-                  className="ml-3 pt-4 text-center"
-                  type="button"
-                  onClick={handleFindLocationClick}
-                >
-                  <h2 className="bg-gradient-to-br from-black to-stone-500 bg-clip-text font-display text-xl font-bold text-transparent [text-wrap:balance] md:text-3xl md:font-normal">
-                    중간지점 찾기
-                  </h2>
-                </button>
+                <div className="flex items-center justify-center mt-">
+                  <button
+                    className="justify-center rounded-md border border-gray-300 p-2 text-center"
+                    type="button"
+                    onClick={handleFindLocationClick}
+                  >
+                    <h2 className="bg-gradient-to-br from-black to-stone-500 bg-clip-text font-display text-xl font-bold text-transparent md:font-normal">
+                      중간지점 찾기
+                    </h2>
+                  </button>
+                </div>
               </form>
             </div>
             <div className="flex h-60 items-center justify-center"></div>
