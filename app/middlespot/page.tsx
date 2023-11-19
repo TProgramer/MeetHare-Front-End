@@ -146,7 +146,7 @@ export default function MiddleSpot() {
                     </button>
                   </div>
                 ))}
-                <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center mt-3">
                   <button
                     className="my-2 flex w-24 items-center justify-center rounded-md border border-gray-300 px-3 py-2 text-center transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
                     type="button"
@@ -170,7 +170,7 @@ export default function MiddleSpot() {
                 </div>
               </form>
             </div>
-            <div className="mx-auto max-w-md text-center">
+            <div className="mx-auto max-w-md text-center mt-3">
               <div
                 id="ProseContainer"
                 className="prose-sm mt-3 leading-normal text-gray-500 [text-wrap:balance] md:prose"

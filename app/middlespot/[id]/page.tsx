@@ -63,7 +63,7 @@ export default function MiddleSpotRoom() {
                     {location.stationName ? location.stationName : "미정"}
                   </button>
                 ))}
-                <div className="flex items-center justify-center mt-">
+                <div className="mt-3 flex items-center justify-center">
                   <button
                     className="justify-center rounded-md border border-gray-300 p-2 text-center"
                     type="button"
@@ -78,7 +78,7 @@ export default function MiddleSpotRoom() {
             </div>
             <div className="flex h-60 items-center justify-center"></div>
           </div>
-          <div className="mx-auto max-w-md text-center">
+          <div className="mx-auto mt-3 max-w-md text-center">
             <div className="prose-sm mt-3 leading-normal text-gray-500 [text-wrap:balance] md:prose">
               <p>
                 유저아이디를 눌러 위치를 입력하고 <br />
