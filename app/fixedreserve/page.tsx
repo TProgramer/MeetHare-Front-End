@@ -53,6 +53,11 @@ export default function FiexedReserve() {
     setMembers(memberList);
   }, []);
 
+  const realtimeClick = ()=>{
+    window.location.href = ("/realtimeposition");
+  }
+
+
   return (
     <div className="z-10 w-full max-w-xl break-keep px-5 xl:px-0">
       <div className="my-10 grid w-full max-w-screen-xl animate-fade-up grid-cols-1 gap-5 break-keep px-5 xl:px-0">
@@ -60,6 +65,9 @@ export default function FiexedReserve() {
           <div className="flex flex-col justify-center space-y-3 bg-white px-4 py-6 pt-8 text-center md:px-16">
             <h1 className="font-display text-2xl font-bold">{roomName}</h1>
             <br />
+            <div className="flex justify-center">
+              <button onClick={realtimeClick} className="w-3/4 mt-4 mb-5 flex items-center justify-center rounded-md border border-gray-300 px-3 py-2 text-center text-blue-800 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100" >실시간 위치 확인하기</button>
+            </div>
             <h2 className="mr-5 flex flex-col justify-center text-left text-sm font-bold text-gray-600">
               ⏰ 모임 시간
             </h2>

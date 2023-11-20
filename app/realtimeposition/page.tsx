@@ -34,8 +34,8 @@ const WebSocketPage = () => {
     setUserName(result.nickName);
     setChannelId(myRoomName);
 
-    console.log(userName);
-    console.log(channelId);
+    // console.log(userName);
+    // console.log(channelId);
   }
 
 
@@ -46,16 +46,12 @@ const WebSocketPage = () => {
         const encodedFixStation = encodeURIComponent(fixStation);
         const response = await fetch(`${process.env.NEXT_PUBLIC_serverURL}/map/getStationInfo?fixStation=${encodedFixStation}`);
         const data = await response.json();
-        // 가져온 데이터를 사용할 수 있습니다.
-        console.log('여기여기여기여기:', data);
-
-        console.log('경도 :', data[0].longitude);
-        console.log('위도 :', data[0].latitude);
+        // 가져온 데이터를 사용할 수 있습니다.  
         setTargetStationLong(data[0].longitude);
         setTargetStationLat(data[0].latitude);
 
       } catch (error) {
-        console.error("Error fetching station info:", error);
+        // console.error("Error fetching station info:", error);
       }
     };
 
@@ -93,20 +89,20 @@ const WebSocketPage = () => {
         passcode: "guest",
       },
       debug: (str) => {
-        console.log(str);
+        // console.log(str);
       },
     });
 
     stompClient.current.activate();
 
     stompClient.current.onConnect = (frame) => {
-      console.log("Stomp Connected:", frame);
+      // console.log("Stomp Connected:", frame);
 
       const positionsArray: RealTimePosition[] = [];
 
       // Stomp 서버에서 메시지를 받는 로직
       stompClient.current?.subscribe(`/sub/channel/${channelId}`, (message) => {
-        console.log(JSON.parse(message.body));
+        // console.log(JSON.parse(message.body));
         // positionsArray.push(JSON.parse(message.body));
         // setStartStation(JSON.parse(message.body));
         // setPositions([...position]);
@@ -155,8 +151,8 @@ const WebSocketPage = () => {
       setPositions((prevPositions) => [...prevPositions, newLocation]);
 
       });
-      console.log([...positionsArray]);
-      console.log(positionsArray);
+      // console.log([...positionsArray]);
+      // console.log(positionsArray);
     };
   };
 
@@ -169,10 +165,7 @@ const WebSocketPage = () => {
           sender: userName,
           channelId: channelId,
           data: { latitude, longitude },
-        };
-        console.log('서버 보내기 전 체크' + userName)
-
-        console.log(latitude, longitude);
+        }; 
 
         // Stomp 서버로 메시지 보내기
         stompClient.current?.publish({
@@ -182,7 +175,7 @@ const WebSocketPage = () => {
         setIsSharingLocation(true);
       },
       (error) => {
-        console.error("Error getting location:", error);
+        // console.error("Error getting location:", error);
       },
     );
   };
@@ -217,7 +210,7 @@ const WebSocketPage = () => {
       const onLoadKakaoAPI = () => {
         window.kakao.maps.load(() => {
           var container = document.getElementById('map');
-          console.log(coodRef);
+          // console.log(coodRef);
           if (container) {
             navigator.geolocation.getCurrentPosition((point) => {
               var options = {
@@ -286,7 +279,7 @@ const WebSocketPage = () => {
 
             });
           } else {
-            console.error("Container element not found");
+            // console.error("Container element not found");
           }
         });
       };
@@ -315,10 +308,10 @@ const WebSocketPage = () => {
 
 
     }, (error) => {
-      console.error("Error getting current point:", error);
+      // console.error("Error getting current point:", error);
     });
 
-    console.log('New userName:', userName);
+    // console.log('New userName:', userName);
   };
 
   const testFunction = () => {
@@ -330,7 +323,7 @@ const WebSocketPage = () => {
   useEffect(() => {
     let timer = setInterval(() => {
       shareLocation();
-      console.log(positions);
+      // console.log(positions);
     }, 5000);
 
     return () => clearInterval(timer);
